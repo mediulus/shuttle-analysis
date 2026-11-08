@@ -1,0 +1,17 @@
+# Local Python environment and caches
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Collected data and generated analysis outputs
+/data/*
+!/data/.gitkeep
+/results/*
+!/results/.gitkeep
+
+# Local configuration
+.env
+.env.*
+!.env.example
+.DS_Store

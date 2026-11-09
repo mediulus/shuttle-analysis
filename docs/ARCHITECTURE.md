@@ -209,8 +209,9 @@ start/end stop is represented by the ending occurrence, producing one boundary v
 
 `stop_segments.py` contains the simple default Boston Daytime table. It assumes the
 known route order and 384-point shape; it must be manually checked if the shape
-changes. The unresolved Silber Way stop is excluded by default. Other routes need
-explicit reviewed segment mappings.
+changes. Silber Way uses outbound segment 114 after 487 Comm. Ave., on the same
+side of Commonwealth Avenue, and is included in arrival and dwell detection.
+Other routes need explicit reviewed segment mappings.
 
 The CSV runner reads one or all sessions with saved metadata and writes
 `results/arrivals/arrivals_<session_id>.csv`. Rerunning replaces the derived CSV. It does not
@@ -250,7 +251,7 @@ observed arrivals in route order within continuous GPS history. Predictions must
 match session, bus, route, and stop, have fresh/in-service flags, and be received
 at or before the checkpoint, no more than 30 seconds earlier. The latest is used;
 conflicting entries at the same time are skipped. Missing target arrivals remain
-unmatched. Full route order counts unresolved stops without inventing arrivals.
+unmatched. Stops-ahead counts use the full route order, even when an arrival is missing.
 
 `eta_evaluator.py` takes paired timestamps, calculates signed/absolute errors,
 and summarizes count, MAE, and mean signed error. It has no Passio dependency.

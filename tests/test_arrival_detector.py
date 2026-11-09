@@ -157,7 +157,24 @@ class ArrivalTests(unittest.TestCase):
         visits = [a for a in arrivals if a['bus_id'] == '3009'
                   and '2026-11-05T22:11' <= a['estimated_arrival_at'] <= '2026-11-05T22:14:30']
         self.assertEqual([a['stop_id'] for a in visits], ['979'])
-        self.assertFalse(any(a['stop_id'] == '3042' for a in arrivals))
+        self.assertTrue(any(a['stop_id'] == '3042' for a in arrivals))
+
+    def test_saved_silber_way_uses_outbound_pass_only(self):
+        root = Path(__file__).resolve().parents[1]
+        path = root / 'data/sessions/ab79b498-0da0-445a-ab7a-b51333629e8e.json'
+        if not path.exists():
+            self.skipTest('Local research session not present')
+        detector = ArrivalDetector(json.loads(path.read_text()))
+        for segments, expected in [([108, 111, 114, 116], ['3042']),
+                                   ([148, 149, 150, 151, 154], [])]:
+            with self.subTest(segments=segments):
+                samples = []
+                for index, segment in enumerate(segments):
+                    sample = observation(0, index * 30, route=detector.route_id)
+                    vehicle = sample['data']['buses']['device'][0]
+                    vehicle['latitude'], vehicle['longitude'] = detector.shape[segment]
+                    samples.append(sample)
+                self.assertEqual([a['stop_id'] for a in detector.detect(samples)], expected)
 
 
 if __name__ == '__main__':

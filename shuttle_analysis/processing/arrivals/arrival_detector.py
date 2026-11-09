@@ -65,8 +65,7 @@ class ArrivalDetector:
                 raise ValueError("Check stop segments: stops must be near the route and in route order")
             last_progress = progress
             # The repeated first stop is represented by the ending occurrence.
-            # Skip the unresolved Silber Way placement in the default table.
-            if i and not (using_default and str(stop_id) == "3042"):
+            if i:
                 self.stops.append({"id": str(stop_id), "position": str(position),
                                    "coord": coord, "progress": progress})
 

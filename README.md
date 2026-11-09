@@ -102,8 +102,8 @@ step replaces its output files. Raw collection files and the unused
 `data/actual_arrivals.csv` are not rewritten by analysis.
 
 Arrivals are GPS-based estimates, not independently verified arrival times.
-Silber Way (3042) is excluded from arrival/dwell detection until its route
-placement is resolved, but remains in stop counting. Dwell means observed time
+Silber Way (3042) uses outbound segment 114, on the same side of Commonwealth
+Avenue as 487 Comm. Ave., and participates in arrival/dwell detection and ETA evaluation. Dwell means observed time
 inside a stop area, not engine idle or guaranteed stationary time.
 
 ## Guides

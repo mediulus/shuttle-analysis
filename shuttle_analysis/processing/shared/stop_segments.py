@@ -1,7 +1,9 @@
 """Stop IDs and segment indices for the saved 384-point Boston Daytime loop.
 
-Listed in route order. These placements still need field validation. Silber
-Way (3042) is unresolved and the detector skips it when using this default list.
+Listed in route order. Silber Way (3042) uses outbound segment 114, on the
+same side of Commonwealth Avenue as 487 Comm. Ave. (969), before the turnaround.
+The nearby return pass at segment 150 is not its boarding pass. These placements
+still need field validation for precise boarding locations.
 """
 
 BOSTON_DAYTIME_STOPS = [

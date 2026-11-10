@@ -41,9 +41,9 @@ positions. Those fields are not treated as proof of visit identity. Manual
 validation of this assumption and the GPS-derived arrivals remains necessary.
 
 The duplicate first/end stop is represented by its ending occurrence, matching
-the arrival detector. Silber Way remains in stop counting, but has no detected
-arrival under the default table. It therefore cannot supply a checkpoint or a
-target arrival. Other route tables require reviewed stop placements.
+the arrival detector. Silber Way uses outbound segment 114 after 487 Comm. Ave.
+and can supply both checkpoints and target arrivals. Other route tables require
+reviewed stop placements.
 
 Checkpoint time is an estimated arrival, possibly a crossing between GPS samples.
 It need not be the exact instant the bus reaches the boarding point. Both
@@ -179,7 +179,7 @@ Route identity and saved route order must agree; otherwise select one session.
 It writes `passio_stop_mae_all.png` and `.pdf` in
 `results/evaluation/passio/plots/stops/`. A session selection uses its ID in the
 filename. No raw observations or evaluation CSVs are modified. The repeated
-boundary stop is one row labeled 1/11; Silber Way has no evaluated arrivals.
+boundary stop is one row labeled 1/11; Silber Way is evaluated like other stops.
 Counts can differ by column, and comparisons can share a target visit. These are
 descriptive errors against GPS-estimated arrivals, not verified ground truth.
 
@@ -202,7 +202,8 @@ Stop numbers follow the saved route order. The map key includes each number,
 stop ID, name, mean absolute error in minutes, and evaluated comparison count.
 The repeated first/end stop is shown once as 1/11. Colors have a fixed scale
 across the five views: darker means larger error, grey means no evaluated data.
-Silber Way remains grey because it is excluded from arrival detection by default.
+Silber Way uses the same coloring rules as other stops; it is grey only when
+the selected view has no evaluated comparisons.
 
 The pooled view mixes prediction distances and is descriptive. Compare stops at
 the same stops-ahead setting and consider sample counts before calling a stop

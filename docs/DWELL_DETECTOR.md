@@ -17,7 +17,8 @@ dwells = detector.detect(storage.read_observations("vehicles"))
 The constructor and `detect(observations)` interface match `ArrivalDetector`.
 Both use the same route setup, stop placements, 30 m radius, GPS validation,
 route matching, and reset rules. Boston Daytime is the default supported route;
-other routes need reviewed stop segments. Silber Way is excluded by default.
+other routes need reviewed stop segments. Silber Way uses outbound segment 114,
+on the same side of Commonwealth Avenue as 487 Comm. Ave., and is included.
 
 ## Rules
 

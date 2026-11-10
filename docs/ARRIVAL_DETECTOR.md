@@ -73,13 +73,14 @@ up to the sampling interval, apart from GPS/fix-age errors. `arrival_method` is
 The default table assumes the saved 384-point Boston Daytime route and its known
 stop order. Counts, spatial distance, and stop order are checked. If Passio changes
 the shape, manually verify the segment table.
-Silber Way (3042) is skipped by default because its correct route section remains
-unresolved. Raw observations for it are still preserved.
+Silber Way (3042) uses segment 114 on the outbound pass after 487 Comm. Ave.
+It is on the same side of Commonwealth Avenue as that stop. The nearby segment
+150 is on the return pass and is not used for Silber Way arrivals.
 
 For a different route or reviewed placements, supply a mapping such as
 `stop_segments={"1": 0, "2": 45, ...}` to the constructor, or put that mapping in
 the loaded metadata as `stop_segments`. Include every route occurrence. A custom
-mapping must be reviewed: it does not inherit the default Silber Way exclusion.
+mapping must be reviewed against the route direction and boarding locations.
 The route must be one closed coordinate sequence with the first stop repeated last.
 
 The fixed search window assumes roughly 30-second polling. Too much movement,

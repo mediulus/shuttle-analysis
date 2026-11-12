@@ -1,0 +1,46 @@
+{
+  "synthetic": true,
+  "complete": true,
+  "start_service_date": "2024-11-12",
+  "end_service_date": "2026-11-11",
+  "calendar_days": 730,
+  "seed": 1850,
+  "totals": {
+    "sessions": 1038,
+    "trips": 15513,
+    "gps_requests": 1123326,
+    "eta_requests": 10800488,
+    "truth_arrivals": 148841
+  },
+  "routes": {
+    "71342": {
+      "sessions": 546,
+      "trips": 9224,
+      "gps_requests": 690554,
+      "eta_requests": 6905540,
+      "truth_arrivals": 92240
+    },
+    "70113": {
+      "sessions": 492,
+      "trips": 6289,
+      "gps_requests": 432772,
+      "eta_requests": 3894948,
+      "truth_arrivals": 56601
+    }
+  },
+  "calibration_sessions": [
+    "269aa618-0964-4292-ab8c-f7acdea30030",
+    "ab79b498-0da0-445a-ab7a-b51333629e8e",
+    "cdba4ba1-3b11-4e23-ae6a-7f65628800b5",
+    "ceca0263-c502-4c16-9e56-0e6656b5b393",
+    "d98b526a-bc68-47fa-ba7b-55246b06729e",
+    "e3cf497e-c2bf-407e-afc8-c71187cca2e3"
+  ],
+  "held_out_real_sessions": [
+    "09f2bda3-b802-4462-9a4d-05b53e3b2b43",
+    "0b7cd3cc-5945-412f-85a5-8f24e98c3c46",
+    "0faba7a3-41b8-4f3e-aa78-109226e123df",
+    "991fe46b-2157-45c9-9b89-ec8051cff896"
+  ],
+  "note": "Scenario data, not reconstructed historical observations or actual Passio forecasts."
+}

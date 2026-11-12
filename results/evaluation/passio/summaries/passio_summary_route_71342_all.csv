@@ -1,0 +1,5 @@
+route_id,route_name,stops_ahead,checkpoints,no_target_arrival,no_prediction,ambiguous_prediction,count,mae_seconds,mean_error_seconds
+71342,Boston Daytime,1,201,52,3,0,146,94.7185041849315,-68.07206378767123
+71342,Boston Daytime,2,201,83,1,0,117,174.413582017094,-162.99352121367522
+71342,Boston Daytime,3,201,107,0,0,94,267.5114015,-255.78873224468086
+71342,Boston Daytime,4,201,125,0,0,76,364.82171847368426,-356.15761728947365

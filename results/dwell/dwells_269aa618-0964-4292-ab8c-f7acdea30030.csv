@@ -1,0 +1,1 @@
+session_id,bus_id,route_id,stop_id,route_stop_position,estimated_arrival_at,previous_observed_at,arrival_method,last_inside_at,first_outside_at,observed_dwell_seconds

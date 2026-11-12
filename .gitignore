@@ -4,12 +4,6 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 
-# Collected data and generated analysis outputs
-/data/*
-!/data/.gitkeep
-/results/*
-!/results/.gitkeep
-
 # Local configuration
 .env
 .env.*

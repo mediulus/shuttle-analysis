@@ -1,0 +1,5 @@
+stops_ahead,checkpoints,no_target_arrival,no_prediction,ambiguous_prediction,count,mae_seconds,mean_error_seconds
+1,7,3,0,0,4,68.73291425000001,-65.75043925
+2,7,5,0,0,2,122.47221549999999,-116.5072655
+3,7,7,0,0,0,,
+4,7,7,0,0,0,,

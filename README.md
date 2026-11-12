@@ -88,9 +88,9 @@ evaluation CSVs; regenerate them after updating evaluation results.
 
 ## Data and results
 
-Collected data, generated results, and the virtual environment are excluded from
-Git. A fresh clone includes empty `data/` and `results/` directories. Collect a
-new session or copy your existing local data into `data/` before running analysis.
+Collected data and generated results are tracked in Git under `data/` and
+`results/`. Commit and push updated files to back up new collection and analysis
+outputs. The virtual environment remains excluded from Git.
 The tests use synthetic data; the optional local research-session test is skipped
 when its saved session is absent.
 

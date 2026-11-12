@@ -15,9 +15,9 @@ can supply the same paired timestamp records to `evaluate()` and `summarize()`.
 For A → B → C → D → E, an observed arrival at A is a four-stops-ahead checkpoint
 for E. The runner evaluates one, two, three, and four stops ahead.
 
-1. Read predictions and detect arrivals from the saved session. Evaluation uses
-   the snapshot's primary route; default snapshots analyze Boston Daytime even
-   when collection also recorded Saferide.
+1. Read predictions and detect arrivals separately for Boston Daytime and
+   Saferide Boston East. Shared stop IDs never merge route histories.
+   See [Saferide analysis](SAFERIDE_ANALYSIS.md) for mappings.
 2. Reuse GPS matching to divide each bus's history into continuous stretches.
    A failed request, missing bus, route change, bad fix, or long gap breaks the
    stretch, using the existing detector's rules. Never match across these breaks.
@@ -90,7 +90,9 @@ these files under `results/evaluation/passio/`:
 - `coverage/passio_coverage_<session_id>.csv`: four rows per observed checkpoint, with
   status `matched`, `no_target_arrival`, `no_prediction`, or `ambiguous_prediction`.
 - `summaries/passio_summary_<session_id>.csv`: error averages and coverage counts by stops ahead.
-- `summaries/passio_summary_all.csv`: pooled summary when running all saved sessions.
+- `summaries/passio_summary_all.csv`: pooled summary across routes and sessions.
+- `summaries/passio_summary_by_route_<session_id|all>.csv`: route IDs/names and separate route summaries.
+- `summaries/passio_summary_route_<route_id>_<session_id|all>.csv`: one route summary.
 
 The error CSV columns are:
 
@@ -139,8 +141,9 @@ After evaluation, run:
 .venv/bin/python -m shuttle_analysis.evaluation.plot_evaluation
 ```
 
-The script reads `results/evaluation/passio/summaries/passio_summary_all.csv`
-and saves a three-panel figure as `passio_summary_all.png` and `passio_summary_all.pdf` in
+By default the script reads the pooled summary plus each `passio_summary_route_*_all.csv`
+and writes separate three-panel figures. The pooled output is
+`passio_summary_all.png` and `passio_summary_all.pdf` in
 `results/evaluation/passio/plots/`. The panels show mean absolute error, mean
 signed error, and stacked checkpoint coverage.
 Error axes use seconds. Negative signed error means an earlier prediction.
@@ -153,7 +156,8 @@ For a session or another model's summary with the same columns:
 .venv/bin/python -m shuttle_analysis.evaluation.plot_evaluation --summary results/evaluation/passio/summaries/passio_summary_<session-id>.csv
 ```
 
-Use `--output-dir <folder>` to choose another plot directory.
+Use `--route-id <id>` for one route (for example, `70113` for Boston East), or
+`--output-dir <folder>` to choose another plot directory.
 `plot_summary(rows, output)` can also be called directly. Plotting reads derived
 summaries only and does not rerun collection or evaluation. It requires
 Matplotlib, listed in `requirements.txt`. Rerunning replaces only the figure
@@ -174,11 +178,13 @@ selected 1, 2, 3, and 4 stops before that target. Each cell shows mean absolute
 error in minutes and its evaluated comparison count. Lower values mean smaller
 errors. Grey cells mean no data, rather than zero error.
 
-The default chart pools all per-session error CSVs, weighting comparisons equally.
-Route identity and saved route order must agree; otherwise select one session.
+By default the command writes a separate chart for each supported route, pooling
+its per-session error CSVs and weighting comparisons equally. Use `--route-id <id>`
+for one route. Saved route geometry/order must agree; otherwise select one session.
 It writes `passio_stop_mae_all.png` and `.pdf` in
 `results/evaluation/passio/plots/stops/`. A session selection uses its ID in the
-filename. No raw observations or evaluation CSVs are modified. The repeated
+filename; Saferide basenames also contain `route_<id>`. No raw observations or
+evaluation CSVs are modified. The repeated
 boundary stop is one row labeled 1/11; Silber Way is evaluated like other stops.
 Counts can differ by column, and comparisons can share a target visit. These are
 descriptive errors against GPS-estimated arrivals, not verified ground truth.
@@ -191,7 +197,9 @@ descriptive errors against GPS-estimated arrivals, not verified ground truth.
 .venv/bin/python -m shuttle_analysis.evaluation.plot_stop_map --session-id <session-id>
 ```
 
-The script uses saved route coordinates and evaluation error CSVs. It writes
+The script uses saved route coordinates and evaluation error CSVs. It writes a
+separate map per supported route; `--route-id <id>` selects just one. For Boston
+Daytime it writes
 `passio_stop_map_all.html`, `.png`, and `.pdf` in
 `results/evaluation/passio/plots/maps/` (or a session-specific basename).
 The HTML is self-contained, works offline, and has a selector for all horizons
@@ -200,8 +208,9 @@ map tiles, API requests, or new dependencies are used.
 
 Stop numbers follow the saved route order. The map key includes each number,
 stop ID, name, mean absolute error in minutes, and evaluated comparison count.
-The repeated first/end stop is shown once as 1/11. Colors have a fixed scale
+An explicitly repeated first/end stop is shown once (1/11 for Boston Daytime). Colors have a fixed scale
 across the five views: darker means larger error, grey means no evaluated data.
+Saferide filenames include `route_<id>`.
 Silber Way uses the same coloring rules as other stops; it is grey only when
 the selected view has no evaluated comparisons.
 

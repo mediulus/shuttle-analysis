@@ -18,9 +18,7 @@ def match_predictions(snapshot, observations, arrivals, predictions, max_stops=4
     if max_age_seconds < 0:
         raise ValueError("max_age_seconds must be nonnegative")
     route = ArrivalDetector(snapshot)
-    raw = snapshot["metadata"]["stop_metadata"]
-    # Drop the repeated starting occurrence, keeping the ending occurrence.
-    stops = raw["routes"][route.route_id][3:]
+    stops = route.occurrences
     if max_stops >= len(stops):
         raise ValueError("Checkpoints must be less than one full loop apart")
     positions = {str(position): i for i, (position, _, _) in enumerate(stops)}

@@ -43,7 +43,7 @@ class CollectorTests(unittest.TestCase):
 
     def test_metadata_discovers_saferide_and_deduplicates_occurrences(self):
         routes = collection_routes(stop_metadata(), 71342)
-        self.assertEqual(list(routes), ["71342", "70113", "45010"])
+        self.assertEqual(list(routes), ["71342", "70113"])
         self.assertEqual(routes["71342"]["stop_ids"], ["979", "991"])
         with self.assertRaises(ValueError):
             collection_routes(stop_metadata(), "missing")
@@ -74,12 +74,11 @@ class CollectorTests(unittest.TestCase):
         api = Mock()
         api.get_vehicles.return_value = vehicles("71342", "70113", "70113", "45010", "73992")
         observations = self.configured_collector(api).collect_once()
-        self.assertEqual(len(observations), 6)
+        self.assertEqual(len(observations), 5)
         self.assertEqual(api.get_vehicles.call_count, 1)
         self.assertEqual(api.get_etas.call_args_list, [
             call("979", route_id="71342"), call("991", route_id="71342"),
             call("979", route_id="70113"), call("973", route_id="70113"),
-            call("3048", route_id="45010"),
         ])
 
     def test_no_active_service_only_collects_gps(self):
@@ -112,7 +111,7 @@ class CollectorTests(unittest.TestCase):
             api = Mock()
             api.get_vehicles.return_value = response
             observations = self.configured_collector(api).collect_once()
-            self.assertEqual({obs["route_id"] for obs in observations[1:]}, {"71342", "70113", "45010"})
+            self.assertEqual({obs["route_id"] for obs in observations[1:]}, {"71342", "70113"})
 
     def test_failed_eta_is_recorded_without_stopping_other_routes(self):
         api = Mock()
@@ -179,7 +178,7 @@ class CollectorTests(unittest.TestCase):
                 main()
             snapshot_path, = (Path(directory) / "sessions").glob("*.json")
             snapshot = json.loads(snapshot_path.read_text())
-            self.assertEqual(set(snapshot["metadata"]["eta_routes"]), {"71342", "70113", "45010"})
+            self.assertEqual(set(snapshot["metadata"]["eta_routes"]), {"71342", "70113"})
             rows = CSVStorage(snapshot["session_id"], directory).read_observations("eta")
             self.assertEqual([row["route_id"] for row in rows], ["70113", "70113"])
 

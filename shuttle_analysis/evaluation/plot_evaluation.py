@@ -7,6 +7,8 @@ from pathlib import Path
 
 from matplotlib.figure import Figure
 
+from ..route_config import PROJECT_ROUTE_IDS
+
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -20,7 +22,8 @@ def plot_summary(rows, output):
     bias = [float(row["mean_error_seconds"]) if row["mean_error_seconds"] not in (None, "") else float("nan") for row in rows]
     figure = Figure(figsize=(13, 5.5), layout="constrained")
     axes = figure.subplots(1, 3)
-    figure.suptitle("Shuttle ETA evaluation", fontsize=17)
+    route_name = rows[0].get("route_name") if rows else None
+    figure.suptitle(f"{route_name or 'All analyzed routes'} — ETA evaluation", fontsize=17)
     for axis in axes:
         axis.set_xlabel("Stops ahead")
         axis.set_xticks(stops)
@@ -65,16 +68,26 @@ def plot_summary(rows, output):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--summary", type=Path, default=ROOT / "results/evaluation/passio/summaries/passio_summary_all.csv")
+    selection = parser.add_mutually_exclusive_group()
+    selection.add_argument("--summary", type=Path, help="Plot one summary CSV")
+    selection.add_argument("--route-id", help="Plot the combined-session summary for one route")
     parser.add_argument("--output-dir", type=Path, default=ROOT / "results/evaluation/passio/plots")
     args = parser.parse_args()
-    with args.summary.open(newline="", encoding="utf-8") as file:
-        rows = list(csv.DictReader(file))
-    if not rows:
-        parser.error("The summary CSV contains no rows; run evaluation first")
-    output = args.output_dir / args.summary.with_suffix(".png").name
-    plot_summary(rows, output)
-    print(f"Saved {output} and {output.with_suffix('.pdf')}")
+    if args.route_id and args.route_id not in PROJECT_ROUTE_IDS:
+        parser.error("Choose Boston Daytime (71342) or Saferide Boston East (70113)")
+    base = ROOT / "results/evaluation/passio/summaries"
+    summaries = ([args.summary] if args.summary else
+                 [base / f"passio_summary_route_{args.route_id}_all.csv"] if args.route_id else
+                 [base / "passio_summary_all.csv", *(path for rid in PROJECT_ROUTE_IDS
+                   if (path := base / f"passio_summary_route_{rid}_all.csv").exists())])
+    for path in summaries:
+        with path.open(newline="", encoding="utf-8") as file:
+            rows = list(csv.DictReader(file))
+        if not rows:
+            parser.error("The summary CSV contains no rows; run evaluation first")
+        output = args.output_dir / path.with_suffix(".png").name
+        plot_summary(rows, output)
+        print(f"Saved {output} and {output.with_suffix('.pdf')}")
 
 
 if __name__ == "__main__":

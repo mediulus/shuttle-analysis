@@ -1,10 +1,8 @@
 """Draw numbered route stops with ETA errors, without downloading map tiles."""
 
 import argparse
-import csv
 import html
 import io
-import json
 import math
 from pathlib import Path
 
@@ -12,9 +10,37 @@ from matplotlib import colormaps
 from matplotlib.cm import ScalarMappable
 from matplotlib.colors import Normalize
 from matplotlib.figure import Figure
+from matplotlib.backends.backend_agg import FigureCanvasAgg
+from matplotlib.transforms import Bbox
+
+from .plot_inputs import route_views
 
 
 ROOT = Path(__file__).resolve().parents[2]
+
+
+def spread_labels(figure, axis, annotations):
+    """Place dense route labels around their markers without covering other labels."""
+    canvas = FigureCanvasAgg(figure)
+    canvas.draw()
+    renderer = canvas.get_renderer()
+    points = [axis.transData.transform(annotation.xy) for annotation in annotations]
+    markers = [Bbox.from_bounds(x - 5, y - 5, 10, 10) for x, y in points]
+    placed = []
+    directions = [(1, 1), (-1, 1), (1, -1), (-1, -1), (0, 1), (0, -1), (1, 0), (-1, 0)]
+    for annotation in annotations:
+        options = [annotation.get_position(),
+                   *((x * radius, y * radius) for radius in (18, 30, 44, 60, 78)
+                     for x, y in directions)]
+        for offset in options:
+            annotation.set_position(offset)
+            annotation.update_positions(renderer)
+            annotation.update_bbox_position_size(renderer)
+            box = annotation.get_bbox_patch().get_window_extent(renderer).expanded(1.1, 1.15)
+            if (axis.bbox.contains(box.x0, box.y0) and axis.bbox.contains(box.x1, box.y1)
+                    and not any(box.overlaps(other) for other in [*placed, *markers])):
+                break
+        placed.append(box)
 
 
 def stop_errors(rows):
@@ -39,7 +65,7 @@ def draw_map(snapshot, rows, title, scale):
         return (6371 * math.radians(float(lon) - origin_lon) * math.cos(math.radians(origin_lat)),
                 6371 * math.radians(float(lat) - origin_lat))
 
-    figure = Figure(figsize=(14, 8), layout="constrained")
+    figure = Figure(figsize=(14, max(8, len(occurrences) * 0.43)), layout="constrained")
     axis, key = figure.subplots(1, 2, gridspec_kw={"width_ratios": [1, 1.25]})
     figure.suptitle(title, fontsize=17)
     x, y = zip(*(xy(p["lat"], p["lng"]) for p in shape))
@@ -50,9 +76,9 @@ def draw_map(snapshot, rows, title, scale):
     axis.set_title("Saved Passio route • north is up", fontsize=11)
     axis.margins(0.18)
     axis.grid(alpha=0.15)
-    stats = stop_errors(rows)
+    stats = stop_errors([row for row in rows if row["route_id"] == route_id])
     colors = colormaps["YlOrRd"]
-    table_rows, table_colors = [], []
+    table_rows, table_colors, annotations = [], [], []
     seen = set()
     # Label offsets keep nearby Boston Daytime stops readable; coordinates stay fixed.
     offsets = {"979": (20, -23), "991": (-26, -16), "992": (28, 15),
@@ -69,10 +95,11 @@ def draw_map(snapshot, rows, title, scale):
         color = colors(scale(mae / 60)) if mae is not None else "#d1d5db"
         point = xy(stop["latitude"], stop["longitude"])
         axis.scatter(*point, s=110, c=[color], edgecolors="#333333", zorder=3)
-        axis.annotate(numbers, point, xytext=offsets.get(stop_id, (16, 16)),
+        annotation = axis.annotate(numbers, point, xytext=offsets.get(stop_id, (16, 16)),
                       textcoords="offset points", ha="center", fontsize=10, fontweight="bold",
                       bbox={"boxstyle": "round,pad=0.3", "fc": "white", "ec": "#32618c"},
                       arrowprops={"arrowstyle": "-", "color": "#555555"})
+        annotations.append(annotation)
         table_rows.append([numbers, stop_id, stop["name"], f"{mae / 60:.2f}" if mae is not None else "—", str(count)])
         table_colors.append(color)
     key.axis("off")
@@ -81,46 +108,26 @@ def draw_map(snapshot, rows, title, scale):
                       colWidths=[0.08, 0.13, 0.54, 0.14, 0.08], cellLoc="left", loc="center")
     table.auto_set_font_size(False)
     table.set_fontsize(9)
-    table.scale(1, 2)
+    table.scale(1, 1.6 if len(table_rows) > 20 else 2)
     for i, color in enumerate(table_colors, 1):
         table[i, 3].set_facecolor(color)
     bar = figure.colorbar(ScalarMappable(norm=scale, cmap=colors),
                          ax=axis, orientation="horizontal", shrink=0.8, pad=0.08)
     bar.set_label("Mean absolute error (minutes): darker = larger error")
-    figure.supxlabel("Grey = no evaluated data. GPS-estimated arrivals; preliminary. Stop 1/11 is the same location.\nAll-horizons results mix prediction distances; use a stops-ahead view for a fairer comparison.", fontsize=10)
+    figure.supxlabel("Grey = no evaluated data. GPS-estimated arrivals; preliminary. Repeated start/end stops share a marker.\nAll-horizons results mix prediction distances; use a stops-ahead view for a fairer comparison.", fontsize=10)
+    if route_id != "71342":
+        spread_labels(figure, axis, annotations)
     return figure
 
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--session-id", help="Map one evaluated session; otherwise combine sessions")
-    args = parser.parse_args()
-    base = ROOT / "results/evaluation/passio"
-    files = [base / f"errors/passio_errors_{args.session_id}.csv"] if args.session_id else sorted((base / "errors").glob("passio_errors_*.csv"))
-    if not files:
-        parser.error("Run evaluation first: no error CSVs found")
-    snapshots, rows = [], []
-    for path in files:
-        session_id = path.stem.removeprefix("passio_errors_")
-        snapshots.append(json.loads((ROOT / "data/sessions" / f"{session_id}.json").read_text()))
-        with path.open(newline="", encoding="utf-8") as file:
-            rows.extend(csv.DictReader(file))
-    snapshot = snapshots[0]
+def save_map(snapshot, rows, output_dir, name):
+    """Write the offline horizon selector and pooled PNG/PDF for one route."""
     route_id = str(snapshot["metadata"]["route_id"])
     raw = snapshot["metadata"]["stop_metadata"]
-    for other in snapshots[1:]:
-        other_raw = other["metadata"]["stop_metadata"]
-        if (str(other["metadata"]["route_id"]) != route_id
-                or other_raw["routePoints"][route_id] != raw["routePoints"][route_id]
-                or other_raw["routes"][route_id] != raw["routes"][route_id]):
-            parser.error("Route geometry/order differs across sessions; use --session-id")
-    rows = [row for row in rows if row["route_id"] == route_id]
     views = [("All stops-ahead groups", rows)] + [(f"{n} stops ahead", [r for r in rows if int(r["stops_ahead"]) == n]) for n in range(1, 5)]
     maximum = max((mae / 60 for _, view in views for _, mae in stop_errors(view).values()), default=1)
     scale = Normalize(0, maximum or 1)
-    output_dir = base / "plots/maps"
     output_dir.mkdir(parents=True, exist_ok=True)
-    name = f"passio_stop_map_{args.session_id or 'all'}"
     sections = []
     route_name = raw["routes"][route_id][0]
     for i, (label, view) in enumerate(views):
@@ -140,6 +147,20 @@ def main():
 {''.join(sections)}<script>document.getElementById('distance').addEventListener('change', function() {{ document.querySelectorAll('section').forEach((section, i) => section.hidden = i !== Number(this.value)); }});</script></html>'''
     (output_dir / f"{name}.html").write_text(page, encoding="utf-8")
     print(f"Saved interactive HTML, PNG, and PDF in {output_dir} ({name})")
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--session-id", help="Map one evaluated session; otherwise combine sessions")
+    parser.add_argument("--route-id", help="Map one route; otherwise write a map for every supported route")
+    args = parser.parse_args()
+    try:
+        views = route_views(ROOT, args.session_id, args.route_id)
+    except ValueError as error:
+        parser.error(str(error))
+    for snapshot, rows, suffix in views:
+        save_map(snapshot, rows, ROOT / "results/evaluation/passio/plots/maps",
+                 f"passio_stop_map_{suffix}")
 
 
 if __name__ == "__main__":

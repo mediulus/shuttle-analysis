@@ -6,6 +6,7 @@ from pathlib import Path
 
 from .prediction_extractor import PredictionExtractor
 from ...storage import CSVStorage
+from ...route_config import PROJECT_ROUTE_IDS
 
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -16,8 +17,11 @@ PREDICTION_FIELDS = ["session_id", "bus_id", "route_id", "stop_id",
 
 def extract_session(session_id, data_dir):
     storage = CSVStorage(session_id, data_dir)
-    extractor = PredictionExtractor(storage.read_session_metadata())
-    return extractor.extract(storage.read_observations("eta"))
+    snapshot = storage.read_session_metadata()
+    extractor = PredictionExtractor(snapshot)
+    selected = set(PROJECT_ROUTE_IDS)
+    return [row for row in extractor.extract(storage.read_observations("eta"))
+            if row["route_id"] in selected]
 
 
 def save_predictions(predictions, path):

@@ -10,7 +10,8 @@ It is an estimate based on collection times, not exact boarding-location ground 
 - `processing/shared/route_geometry.py`: coordinates, geographic distance, and segment projection.
 - `processing/shared/route_matching.py`: choose a plausible distance along the route for a GPS point.
 - `processing/shared/vehicle_positions.py`: shared GPS validation, history resets, and matched observations.
-- `processing/shared/stop_segments.py`: stop IDs and chosen segments for Boston Daytime.
+- `processing/shared/stop_segments.py`: Boston Daytime and Boston East segment tables.
+- `processing/shared/routes.py`: independent route views and loop stop occurrences.
 
 These paths are inside `shuttle_analysis/`. Arrival detection calls the shared
 route matcher; dwell detection and checkpoint matching use the same matched
@@ -81,7 +82,10 @@ For a different route or reviewed placements, supply a mapping such as
 `stop_segments={"1": 0, "2": 45, ...}` to the constructor, or put that mapping in
 the loaded metadata as `stop_segments`. Include every route occurrence. A custom
 mapping must be reviewed against the route direction and boarding locations.
-The route must be one closed coordinate sequence with the first stop repeated last.
+Custom routes must be one closed coordinate sequence with the first stop repeated
+last. Boston East uses its own explicit segment assignments and supports closure gaps
+up to 50 m. Only explicitly repeated
+start/end stops are deduplicated. See [Saferide analysis](SAFERIDE_ANALYSIS.md).
 
 The fixed search window assumes roughly 30-second polling. Too much movement,
 GPS ambiguity, or missing samples can cause missed arrivals. Stop-area entry may
@@ -98,8 +102,10 @@ attempt to recover skipped history. Manual validation is still needed.
 Omit `--session-id` to process all saved snapshots in `data/sessions/`. Output goes to
 `results/arrivals/arrivals_<session_id>.csv`. Rerunning replaces that derived CSV, not the
 collected inputs. Run after collection so the input session is stable.
-`data/actual_arrivals.csv` is left unchanged. Saferide collection is enabled, but
-its arrival processing still needs its own reviewed stop-segment configuration.
+`data/actual_arrivals.csv` is left unchanged. The runner analyzes Boston Daytime
+and Saferide Boston East when present in each snapshot. Every output row
+retains its route ID. Saferide mappings are pinned to saved shape/order fingerprints;
+changed geometry requires a new mapping review.
 
 ## Use in evaluation
 

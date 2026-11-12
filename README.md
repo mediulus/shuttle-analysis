@@ -4,9 +4,10 @@ Collect Passio GO predictions and GPS observations, estimate arrivals and stop
 dwell, and compare predictions with GPS-estimated arrivals at 1–4-stop checkpoints.
 The project uses small Python modules and saved CSVs so each step can be inspected.
 
-Collection follows reported active Boston Daytime and Saferide routes. Arrival,
-dwell, and checkpoint evaluation currently default to Boston Daytime; other routes
-need reviewed stop-to-segment mappings. The regression model is not implemented.
+Collection, arrival detection, dwell analysis, and ETA evaluation cover only
+Boston Daytime (71342) and Saferide Boston East (70113). Each route has separate
+results and plots. See [Boston East analysis](docs/SAFERIDE_ANALYSIS.md). The
+regression model is not implemented.
 
 ## Layout
 
@@ -61,13 +62,13 @@ python3 -m venv .venv
 # Evaluate selected predictions at 1–4-stop checkpoints.
 .venv/bin/python -m shuttle_analysis.evaluation.evaluate_passio
 
-# Plot overall error, bias, and coverage.
+# Plot pooled and per-route error, bias, and coverage.
 .venv/bin/python -m shuttle_analysis.evaluation.plot_evaluation
 
-# Plot MAE at each named stop, with columns for 1–4 stops away.
+# Plot MAE at each named stop, separately for each route, at 1–4 stops away.
 .venv/bin/python -m shuttle_analysis.evaluation.plot_stop_errors
 
-# Create an offline route map with stop numbers, IDs, names, and errors.
+# Create offline maps for each route with stop numbers, IDs, names, and errors.
 .venv/bin/python -m shuttle_analysis.evaluation.plot_stop_map
 
 # Run offline tests.
@@ -77,7 +78,8 @@ python3 -m venv .venv
 The processing runners and evaluator accept `--session-id <session-id>`; without
 it they process sessions with saved metadata in `data/sessions/`. The stop chart
 and map also accept this option. The overall plot selects a summary using
-`--summary <path>`, rather than `--session-id`.
+`--summary <path>`, rather than `--session-id`. All three plot commands also accept
+`--route-id <id>` (for example, `70113` for Saferide Boston East).
 
 Stop collection before analyzing a session. Evaluation reads raw observations
 and generates arrivals and predictions in memory, so the three CSV exports are
@@ -110,6 +112,7 @@ inside a stop area, not engine idle or guaranteed stationary time.
 
 - [System architecture](docs/ARCHITECTURE.md)
 - [Arrival detection](docs/ARRIVAL_DETECTOR.md)
+- [Saferide Boston East analysis](docs/SAFERIDE_ANALYSIS.md)
 - [Dwell detection](docs/DWELL_DETECTOR.md)
 - [Passio prediction extraction](docs/PREDICTION_EXTRACTOR.md)
 - [Checkpoint evaluation and plots](docs/ETA_EVALUATION.md)

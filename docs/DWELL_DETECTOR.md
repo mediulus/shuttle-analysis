@@ -16,9 +16,10 @@ dwells = detector.detect(storage.read_observations("vehicles"))
 
 The constructor and `detect(observations)` interface match `ArrivalDetector`.
 Both use the same route setup, stop placements, 30 m radius, GPS validation,
-route matching, and reset rules. Boston Daytime is the default supported route;
-other routes need reviewed stop segments. Silber Way uses outbound segment 114,
-on the same side of Commonwealth Avenue as 487 Comm. Ave., and is included.
+route matching, and reset rules. The runners analyze only Boston Daytime and
+Saferide Boston East separately; other routes need explicit stop segments.
+Boston Daytime's Silber Way uses outbound segment 114, on the same side of
+Commonwealth Avenue as 487 Comm. Ave., and is included.
 
 ## Rules
 
@@ -61,7 +62,8 @@ After collection, run:
 .venv/bin/python -m shuttle_analysis.processing.dwell.review_dwells --session-id <session-id>
 ```
 
-Omit `--session-id` to process all saved snapshots in `data/sessions/`. The runner writes
+Omit `--session-id` to process all saved snapshots in `data/sessions/`. Each session
+includes only Boston Daytime and Boston East; rows retain route IDs. The runner writes
 `results/dwell/dwells_<session_id>.csv`. Rerunning replaces only that derived CSV and
 leaves collected inputs unchanged.
 

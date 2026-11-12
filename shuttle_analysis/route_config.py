@@ -1,0 +1,5 @@
+"""Routes included in this project's collection and analysis."""
+
+BOSTON_DAYTIME_ROUTE_ID = "71342"
+BOSTON_EAST_ROUTE_ID = "70113"
+PROJECT_ROUTE_IDS = (BOSTON_DAYTIME_ROUTE_ID, BOSTON_EAST_ROUTE_ID)

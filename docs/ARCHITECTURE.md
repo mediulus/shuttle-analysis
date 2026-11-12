@@ -12,8 +12,8 @@ signed error = predicted arrival time - estimated actual arrival time
 absolute error = abs(signed error)
 ```
 
-Collection supports Boston Daytime and reported active Saferide routes. The basic
-arrival detector currently has a stop-segment table for Boston Daytime only.
+Collection and analysis support only Boston Daytime and Saferide Boston East.
+The arrival detector has a separate stop-segment table for each.
 Checkpoint matching and evaluation are implemented; results use GPS-estimated arrivals.
 
 ## Layout
@@ -129,7 +129,7 @@ The tested requests use `position=0` for ETA and `getStops=2` / `getBuses=2` for
 metadata/vehicles; the exact meanings of those numeric parameters remain unverified.
 
 The collector's startup creates a session ID, fetches metadata, discovers Boston
-Daytime and all routes named Saferide, and saves the configuration plus full response.
+Daytime and Saferide Boston East, and saves the configuration plus full response.
 Each cycle requests vehicles once, then ETAs for unique stops on reported active
 configured routes. Shared stops are requested separately for each route. It follows
 assignments rather than switching at fixed clock times.
@@ -211,6 +211,8 @@ start/end stop is represented by the ending occurrence, producing one boundary v
 known route order and 384-point shape; it must be manually checked if the shape
 changes. Silber Way uses outbound segment 114 after 487 Comm. Ave., on the same
 side of Commonwealth Avenue, and is included in arrival and dwell detection.
+Boston East's table includes explicit segment assignments and a shape/order
+fingerprint. Its small closure gap is connected to complete the loop. See [Saferide analysis](SAFERIDE_ANALYSIS.md).
 Other routes need explicit reviewed segment mappings.
 
 The CSV runner reads one or all sessions with saved metadata and writes
@@ -257,7 +259,8 @@ unmatched. Stops-ahead counts use the full route order, even when an arrival is 
 and summarizes count, MAE, and mean signed error. It has no Passio dependency.
 `evaluate_passio.py` runs matching and evaluation and writes per-session errors,
 coverage, and summaries under `results/evaluation/passio/`, plus an all-session
-summary. Each observed checkpoint contributes four coverage rows. Means weight
+summary. It also writes per-route summaries. Each observed
+checkpoint contributes four coverage rows. Means weight
 evaluated pairs equally, not sessions equally.
 
 The plotting scripts use only derived evaluation CSVs and saved metadata:
@@ -268,7 +271,9 @@ The plotting scripts use only derived evaluation CSVs and saved metadata:
 | `plot_stop_errors.py` | Stop names/IDs by 1–4-stops-away MAE | `stops/passio_stop_mae_all.png` and `.pdf` |
 | `plot_stop_map.py` | Numbered route map, stop key, and MAE | `maps/passio_stop_map_all.html`, `.png`, and `.pdf` |
 
-Stop chart and map filenames use a session ID when selected. The map HTML has
+Each plot command writes separate route views by default and accepts `--route-id`.
+Boston Daytime stop charts/maps retain their existing filenames; Saferide outputs
+include `route_<id>`. Stop chart and map filenames use a session ID when selected. The map HTML has
 five embedded views, including separate prediction horizons, and needs no network.
 The future regression model can reuse the generic evaluator with the same held-out
 checkpoint/target pairs. Model generation is not implemented.

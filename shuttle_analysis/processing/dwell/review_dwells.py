@@ -6,6 +6,7 @@ from pathlib import Path
 
 from .dwell_detector import DwellDetector
 from ...storage import CSVStorage
+from ..shared.routes import analysis_route_ids, route_snapshot
 
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -16,8 +17,10 @@ DWELL_FIELDS = ["session_id", "bus_id", "route_id", "stop_id", "route_stop_posit
 
 def detect_session(session_id, data_dir):
     storage = CSVStorage(session_id, data_dir)
-    detector = DwellDetector(storage.read_session_metadata())
-    return detector.detect(storage.read_observations("vehicles"))
+    snapshot = storage.read_session_metadata()
+    observations = storage.read_observations("vehicles")
+    return [dwell for route_id in analysis_route_ids(snapshot)
+            for dwell in DwellDetector(route_snapshot(snapshot, route_id)).detect(observations)]
 
 
 def save_dwells(dwells, path):

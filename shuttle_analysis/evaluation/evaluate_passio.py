@@ -9,6 +9,7 @@ from .prediction_matching import match_predictions
 from ..processing.arrivals.arrival_detector import ArrivalDetector
 from ..processing.predictions.prediction_extractor import PredictionExtractor
 from ..storage import CSVStorage
+from ..processing.shared.routes import analysis_route_ids, route_snapshot
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -27,10 +28,14 @@ def evaluate_session(session_id, data_dir, max_stops=4):
     storage = CSVStorage(session_id, data_dir)
     snapshot = storage.read_session_metadata()
     observations = storage.read_observations("vehicles")
-    arrivals = ArrivalDetector(snapshot).detect(observations)
     predictions = PredictionExtractor(snapshot).extract(storage.read_observations("eta"))
-    pairs, coverage = match_predictions(snapshot, observations, arrivals, predictions, max_stops)
-    results = evaluate(pairs)
+    results, coverage = [], []
+    for route_id in analysis_route_ids(snapshot):
+        selected = route_snapshot(snapshot, route_id)
+        arrivals = ArrivalDetector(selected).detect(observations)
+        pairs, route_coverage = match_predictions(selected, observations, arrivals, predictions, max_stops)
+        results.extend(evaluate(pairs))
+        coverage.extend(route_coverage)
     return results, coverage, summarize_checkpoints(results, coverage, max_stops)
 
 
@@ -63,6 +68,7 @@ def main():
     args = parser.parse_args()
     sessions = [args.session_id] if args.session_id else sorted(p.stem for p in (ROOT / "data/sessions").glob("*.json"))
     all_results, all_coverage = [], []
+    route_names = {}
     for session_id in sessions:
         results, coverage, summary = evaluate_session(session_id, ROOT / "data")
         for name, folder, rows, fields in [
@@ -73,11 +79,27 @@ def main():
             save_csv(rows, ROOT / "results/evaluation/passio" / folder / f"passio_{name}_{session_id}.csv", fields)
         all_results.extend(results)
         all_coverage.extend(coverage)
+        snapshot = CSVStorage(session_id, ROOT / "data").read_session_metadata()
+        route_names.update({rid: snapshot["metadata"]["stop_metadata"]["routes"][rid][0]
+                            for rid in analysis_route_ids(snapshot)})
         print(f"{session_id}: {len(results)} evaluated predictions, {len(coverage)} checkpoints")
     # This summary covers exactly the sessions selected by this invocation.
     summary = summarize_checkpoints(all_results, all_coverage)
     output = ROOT / "results/evaluation/passio/summaries" / (f"passio_summary_{args.session_id}.csv" if args.session_id else "passio_summary_all.csv")
     save_csv(summary, output, SUMMARY_FIELDS)
+    by_route = []
+    for route_id, name in route_names.items():
+        by_route.extend({"route_id": route_id, "route_name": name, **row}
+                        for row in summarize_checkpoints(
+                            [r for r in all_results if r["route_id"] == route_id],
+                            [r for r in all_coverage if r["route_id"] == route_id]))
+    suffix = args.session_id or "all"
+    save_csv(by_route, output.parent / f"passio_summary_by_route_{suffix}.csv",
+             ["route_id", "route_name", *SUMMARY_FIELDS])
+    for route_id, name in route_names.items():
+        save_csv([row for row in by_route if row["route_id"] == route_id],
+                 output.parent / f"passio_summary_route_{route_id}_{suffix}.csv",
+                 ["route_id", "route_name", *SUMMARY_FIELDS])
     for row in summary:
         print(row)
 

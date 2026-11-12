@@ -3,9 +3,11 @@ import time
 
 import requests
 
+from ..route_config import BOSTON_EAST_ROUTE_ID
+
 
 def collection_routes(stop_metadata, daytime_route_id):
-    """Select Boston Daytime and all named Saferide routes from API metadata.
+    """Select Boston Daytime and Saferide Boston East from API metadata.
 
     Keep unique stop IDs in route order for polling. The unmodified metadata
     still preserves repeated occurrences for later analysis.
@@ -14,7 +16,7 @@ def collection_routes(stop_metadata, daytime_route_id):
     routes = {}
     for route_id, route in stop_metadata["routes"].items():
         route_id = str(route_id)
-        if route_id != daytime_route_id and "saferide" not in str(route[0]).lower():
+        if route_id not in (daytime_route_id, BOSTON_EAST_ROUTE_ID):
             continue
         stop_ids = list(dict.fromkeys(str(entry[1]) for entry in route[2:] if entry != 0))
         if not stop_ids:

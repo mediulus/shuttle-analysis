@@ -1,12 +1,12 @@
 """Show mean absolute error at each target stop, grouped by stops away."""
 
 import argparse
-import csv
-import json
 from pathlib import Path
 
 from matplotlib import colormaps
 from matplotlib.figure import Figure
+
+from .plot_inputs import route_views
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -40,7 +40,7 @@ def plot_stop_errors(rows, snapshot, output):
         labels.append(f'{numbers}. {records[stop_id]["name"]} (ID {stop_id})')
     rows = [row for row in rows if row["route_id"] == route_id]
     means, counts = stop_means(rows, stop_ids)
-    figure = Figure(figsize=(13, 8), layout="constrained")
+    figure = Figure(figsize=(13, max(8, len(stop_ids) * 0.5)), layout="constrained")
     axis = figure.subplots()
     colors = colormaps["YlOrRd"].copy()
     colors.set_bad("#e5e7eb")
@@ -70,28 +70,17 @@ def plot_stop_errors(rows, snapshot, output):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--session-id", help="Use one session; otherwise combine all evaluated sessions")
+    parser.add_argument("--route-id", help="Plot one route; otherwise write a chart for every supported route")
     args = parser.parse_args()
     base = ROOT / "results/evaluation/passio"
-    files = [base / f"errors/passio_errors_{args.session_id}.csv"] if args.session_id else sorted((base / "errors").glob("passio_errors_*.csv"))
-    if not files:
-        parser.error("Run evaluation first: no error CSVs found")
-    rows = []
-    snapshot = None
-    for path in files:
-        session_id = path.stem.removeprefix("passio_errors_")
-        current = json.loads((ROOT / "data/sessions" / f"{session_id}.json").read_text())
-        if snapshot is not None:
-            route_id = str(snapshot["metadata"]["route_id"])
-            if (str(current["metadata"]["route_id"]) != route_id
-                    or current["metadata"]["stop_metadata"]["routes"][route_id]
-                    != snapshot["metadata"]["stop_metadata"]["routes"][route_id]):
-                parser.error("Route order differs across sessions; use --session-id")
-        snapshot = current
-        with path.open(newline="", encoding="utf-8") as file:
-            rows.extend(csv.DictReader(file))
-    output = base / "plots/stops" / f"passio_stop_mae_{args.session_id or 'all'}.png"
-    plot_stop_errors(rows, snapshot, output)
-    print(f"Saved {output} and {output.with_suffix('.pdf')}")
+    try:
+        views = route_views(ROOT, args.session_id, args.route_id)
+    except ValueError as error:
+        parser.error(str(error))
+    for snapshot, rows, suffix in views:
+        output = base / "plots/stops" / f"passio_stop_mae_{suffix}.png"
+        plot_stop_errors(rows, snapshot, output)
+        print(f"Saved {output} and {output.with_suffix('.pdf')}")
 
 
 if __name__ == "__main__":

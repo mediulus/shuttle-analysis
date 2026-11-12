@@ -70,3 +70,7 @@ Omit `--session-id` to process all saved snapshots in `data/sessions/`. The runn
 legacy and route-aware ETA CSV schemas through `CSVStorage`, then writes
 `results/predictions/predictions_<session_id>.csv`. Rerunning replaces only that derived
 output. Run after collection; raw inputs remain unchanged.
+
+The CSV runner exports only Boston Daytime (71342) and Saferide Boston East
+(70113). The reusable extractor preserves all routes for direct callers; raw
+collection records are never filtered or rewritten by this export.

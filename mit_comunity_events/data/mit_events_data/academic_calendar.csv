@@ -1,0 +1,214 @@
+﻿start_date,end_date,weekday,term,event,category,no_classes,office,source,weekday_matches_listing,text_as_posted
+2021-08-26,2021-08-26,Thu,Fall 2021,Pre-registration closes (5 PM),registration,False,Academic Calendar,Key dates PDF 2021-22,yes,Thursday | 26 | Pre-registration closes (5 PM)
+2021-08-30,2021-08-30,Mon,Fall 2021,Fall registration opens,registration,False,Academic Calendar,Key dates PDF 2021-22,yes,Monday | 30 | Fall registration opens
+2021-08-31,2021-08-31,Tue,Fall 2021,Registration Day,registration,False,Academic Calendar,Key dates PDF 2021-22,NO,Monday | 31 | Registration Day
+2021-09-06,2021-09-06,Mon,Fall 2021,Labor Day holiday,holiday,True,Academic Calendar,Key dates PDF 2021-22,yes,Monday | 6 | Labor Day holiday
+2021-09-07,2021-09-07,Tue,Fall 2021,Registration Day,registration,False,Academic Calendar,Key dates PDF 2021-22,yes,Tuesday | 7 | Registration Day
+2021-09-08,2021-09-08,Wed,Fall 2021,First day of classes,term_start,False,Academic Calendar,Key dates PDF 2021-22,yes,Wednesday | 8 | First day of classes
+2021-09-10,2021-09-10,Fri,Fall 2021,Registration deadline,registration,False,Academic Calendar,Key dates PDF 2021-22,yes,Friday | 10 | Registration deadline
+2021-09-17,2021-09-17,Fri,Fall 2021,Last day to add H1 classes,deadline,False,Academic Calendar,Key dates PDF 2021-22,yes,Friday | 17 | Last day to add H1 classes
+2021-10-08,2021-10-08,Fri,Fall 2021,Add Date,deadline,False,Academic Calendar,Key dates PDF 2021-22,yes,Friday | 8 | Add Date
+2021-10-11,2021-10-11,Mon,Fall 2021,Indigenous Peoples Day,holiday,True,Academic Calendar,Key dates PDF 2021-22,yes,Monday | 11 | Indigenous Peoples Day
+2021-10-18,2021-10-22,Mon,Fall 2021,Half-term (H1) subjects final exam period,halfterm_exams,False,Academic Calendar,Key dates PDF 2021-22,yes,Week of | 18 | Half-term (H1) subjects final exam period
+2021-11-01,2021-11-01,Mon,Fall 2021,Last day to add H2 subjects,deadline,False,Academic Calendar,Key dates PDF 2021-22,yes,Monday | 1 | Last day to add H2 subjects
+2021-11-11,2021-11-11,Thu,Fall 2021,Veterans Day,holiday,True,Academic Calendar,Key dates PDF 2021-22,yes,Thursday | 11 | Veterans Day
+2021-11-18,2021-11-18,Thu,Fall 2021,Drop Date,deadline,False,Academic Calendar,Key dates PDF 2021-22,yes,Thursday | 18 | Drop Date
+2021-11-25,2021-11-25,Thu,Fall 2021,Thanksgiving,holiday,True,Academic Calendar,Key dates PDF 2021-22,yes,Thursday | 25 | Thanksgiving
+2021-11-26,2021-11-26,Fri,Fall 2021,Institute holiday,holiday,True,Academic Calendar,Key dates PDF 2021-22,yes,Friday | 26 | Institute holiday
+2021-11-29,2021-11-29,Mon,Fall 2021,Last day to drop H2 subjects,deadline,False,Academic Calendar,Key dates PDF 2021-22,yes,Monday | 29 | Last day to drop H2 subjects
+2021-12-01,2021-12-01,Wed,Fall 2021,Pre-registration for IAP and spring opens,registration,False,Academic Calendar,Key dates PDF 2021-22,yes,Wednesday | 1 | Pre-registration for IAP and spring opens
+2021-12-09,2021-12-09,Thu,Fall 2021,Last day of classes,term_end,False,Academic Calendar,Key dates PDF 2021-22,yes,Thursday | 9 | Last day of classes
+2021-12-13,2021-12-17,Mon,Fall 2021,Final exams,exams,True,Academic Calendar,Key dates PDF 2021-22,yes,Week of | 13 | Final exams
+2022-01-03,2022-01-03,Mon,IAP 2022,IAP and spring pre-registration deadlines,registration,False,Academic Calendar,Key dates PDF 2021-22,yes,Monday | 3 | IAP and spring pre-registration deadlines
+2022-01-03,2022-01-03,Mon,IAP 2022,IAP begins,term_start,False,Academic Calendar,Key dates PDF 2021-22,yes,Monday | 3 | IAP begins
+2022-01-24,2022-01-28,Mon,IAP 2022,Registration Week,registration,False,Academic Calendar,Key dates PDF 2021-22,yes,Week of | 24 | Registration Week
+2022-01-28,2022-01-28,Fri,IAP 2022,Last day of IAP,term_end,False,Academic Calendar,Key dates PDF 2021-22,yes,Friday | 28 | Last day of IAP
+2022-01-31,2022-01-31,Mon,Spring 2022,First day of spring classes,term_start,False,Academic Calendar,Key dates PDF 2021-22,yes,Monday | 31 | First day of spring classes
+2022-02-21,2022-02-21,Mon,Spring 2022,Presidents’ Day,holiday,True,Academic Calendar,Key dates PDF 2021-22,yes,Monday | 21 | Presidents’ Day
+2022-03-14,2022-03-18,Mon,Spring 2022,H3 final exam week,halfterm_exams,False,Academic Calendar,Key dates PDF 2021-22,yes,Week of | 14 | H3 final exam week
+2022-04-18,2022-04-18,Mon,Spring 2022,Patriots’ Day,holiday,True,Academic Calendar,Key dates PDF 2021-22,yes,Monday | 18 | Patriots’ Day
+2022-04-19,2022-04-19,Tue,Spring 2022,Drop Date,deadline,False,Academic Calendar,Key dates PDF 2021-22,yes,Tuesday | 19 | Drop Date
+2022-05-02,2022-05-02,Mon,Spring 2022,Pre-registration for summer and fall opens,registration,False,Academic Calendar,Key dates PDF 2021-22,yes,Monday | 2 | Pre-registration for summer and fall opens
+2022-05-10,2022-05-10,Tue,Spring 2022,Last day of spring classes,term_end,False,Academic Calendar,Key dates PDF 2021-22,yes,Tuesday | 10 | Last day of spring classes
+2022-05-13,2022-05-13,Fri,Spring 2022,Final exams begin,exams,True,Academic Calendar,Key dates PDF 2021-22,yes,Friday | 13 | Final exams begin
+2022-05-24,2022-05-27,Tue,Spring 2022,Final exams,exams,True,Academic Calendar,Key dates PDF 2021-22,check,Week of | 24 | Final exams
+2022-05-26,2022-05-26,Thu,Spring 2022,Commencement activities,commencement,False,Academic Calendar,Key dates PDF 2021-22,yes,Thursday | 26 | Commencement activities
+2022-05-26,2022-05-26,Thu,Spring 2022,Summer pre-registration deadline,registration,False,Academic Calendar,Key dates PDF 2021-22,yes,Thursday | 26 | Summer pre-registration deadline
+2022-05-27,2022-05-27,Fri,Spring 2022,Commencement activities,commencement,False,Academic Calendar,Key dates PDF 2021-22,yes,Friday | 27 | Commencement activities
+2022-05-30,2022-05-30,Mon,Spring 2022,Memorial Day,holiday,True,Academic Calendar,Key dates PDF 2021-22,yes,Monday | 30 | Memorial Day
+2022-08-25,2022-08-25,Thu,Fall 2022,Pre-registration closes (5 PM),registration,False,Academic Calendar,Key dates PDF 2022-23,yes,Thursday | 25 | Pre-registration closes (5 PM)
+2022-08-29,2022-08-29,Mon,Fall 2022,Fall registration opens,registration,False,Academic Calendar,Key dates PDF 2022-23,yes,Monday | 29 | Fall registration opens
+2022-09-05,2022-09-05,Mon,Fall 2022,Labor Day holiday,holiday,True,Academic Calendar,Key dates PDF 2022-23,yes,Monday | 5 | Labor Day holiday
+2022-09-06,2022-09-06,Tue,Fall 2022,Registration Day,registration,False,Academic Calendar,Key dates PDF 2022-23,yes,Tuesday | 6 | Registration Day
+2022-09-07,2022-09-07,Wed,Fall 2022,First day of classes,term_start,False,Academic Calendar,Key dates PDF 2022-23,yes,Wednesday | 7 | First day of classes
+2022-09-09,2022-09-09,Fri,Fall 2022,Registration deadline,registration,False,Academic Calendar,Key dates PDF 2022-23,yes,Friday | 9 | Registration deadline
+2022-09-16,2022-09-16,Fri,Fall 2022,Last day to add H1 classes,deadline,False,Academic Calendar,Key dates PDF 2022-23,yes,Friday | 16 | Last day to add H1 classes
+2022-10-07,2022-10-07,Fri,Fall 2022,Add Date,deadline,False,Academic Calendar,Key dates PDF 2022-23,yes,Friday | 7 | Add Date
+2022-10-10,2022-10-10,Mon,Fall 2022,Indigenous Peoples’ Day,holiday,True,Academic Calendar,Key dates PDF 2022-23,yes,Monday | 10 | Indigenous Peoples’ Day
+2022-10-17,2022-10-21,Mon,Fall 2022,Half-term (H1) subjects final exam period,halfterm_exams,False,Academic Calendar,Key dates PDF 2022-23,yes,Week of | 17 | Half-term (H1) subjects final exam period
+2022-11-04,2022-11-04,Fri,Fall 2022,Last day to add H2 subjects,deadline,False,Academic Calendar,Key dates PDF 2022-23,yes,Friday | 4 | Last day to add H2 subjects
+2022-11-11,2022-11-11,Fri,Fall 2022,Veterans Day,holiday,True,Academic Calendar,Key dates PDF 2022-23,yes,Friday | 11 | Veterans Day
+2022-11-23,2022-11-23,Wed,Fall 2022,Drop Date,deadline,False,Academic Calendar,Key dates PDF 2022-23,NO,Thursday | 23 | Drop Date
+2022-11-24,2022-11-24,Thu,Fall 2022,Thanksgiving,holiday,True,Academic Calendar,Key dates PDF 2022-23,yes,Thursday | 24 | Thanksgiving
+2022-11-25,2022-11-25,Fri,Fall 2022,Institute holiday,holiday,True,Academic Calendar,Key dates PDF 2022-23,yes,Friday | 25 | Institute holiday
+2022-11-30,2022-11-30,Wed,Fall 2022,Last day to drop H2 subjects,deadline,False,Academic Calendar,Key dates PDF 2022-23,yes,Wednesday | 30 | Last day to drop H2 subjects
+2022-12-01,2022-12-01,Thu,Fall 2022,Pre-registration for IAP and spring opens,registration,False,Academic Calendar,Key dates PDF 2022-23,yes,Thursday | 1 | Pre-registration for IAP and spring opens
+2022-12-14,2022-12-14,Wed,Fall 2022,Last day of classes,term_end,False,Academic Calendar,Key dates PDF 2022-23,yes,Wednesday | 14 | Last day of classes
+2022-12-16,2022-12-16,Fri,Fall 2022,Final exams,exams,True,Academic Calendar,Key dates PDF 2022-23,check,Week of | 16 | Final exams
+2023-01-09,2023-01-09,Mon,IAP 2023,IAP and spring pre-registration deadlines,registration,False,Academic Calendar,Key dates PDF 2022-23,yes,Monday | 9 | IAP and spring pre-registration deadlines
+2023-01-09,2023-01-09,Mon,IAP 2023,IAP begins,term_start,False,Academic Calendar,Key dates PDF 2022-23,yes,Monday | 9 | IAP begins
+2023-01-30,2023-02-03,Mon,IAP 2023,Registration Week,registration,False,Academic Calendar,Key dates PDF 2022-23,yes,Week of | 30 | Registration Week
+2023-02-03,2023-02-03,Fri,IAP 2023,Last day of IAP,term_end,False,Academic Calendar,Key dates PDF 2022-23,yes,Friday | 3 | Last day of IAP
+2023-02-06,2023-02-06,Mon,Spring 2023,First day of spring classes,term_start,False,Academic Calendar,Key dates PDF 2022-23,yes,Monday | 6 | First day of spring classes
+2023-02-20,2023-02-20,Mon,Spring 2023,Presidents’ Day,holiday,True,Academic Calendar,Key dates PDF 2022-23,yes,Monday | 20 | Presidents’ Day
+2023-03-10,2023-03-10,Fri,Spring 2023,Add Date,deadline,False,Academic Calendar,Key dates PDF 2022-23,yes,Friday | 10 | Add Date
+2023-03-20,2023-03-24,Mon,Spring 2023,H3 final exam week,halfterm_exams,False,Academic Calendar,Key dates PDF 2022-23,yes,Week of | 20 | H3 final exam week
+2023-04-17,2023-04-17,Mon,Spring 2023,Patriots’ Day,holiday,True,Academic Calendar,Key dates PDF 2022-23,yes,Monday | 17 | Patriots’ Day
+2023-04-25,2023-04-25,Tue,Spring 2023,Drop Date,deadline,False,Academic Calendar,Key dates PDF 2022-23,yes,Tuesday | 25 | Drop Date
+2023-05-01,2023-05-01,Mon,Spring 2023,Pre-registration for summer and fall opens,registration,False,Academic Calendar,Key dates PDF 2022-23,yes,Monday | 1 | Pre-registration for summer and fall opens
+2023-05-16,2023-05-16,Tue,Spring 2023,Last day of spring classes,term_end,False,Academic Calendar,Key dates PDF 2022-23,yes,Tuesday | 16 | Last day of spring classes
+2023-05-19,2023-05-19,Fri,Spring 2023,Final exams begin,exams,True,Academic Calendar,Key dates PDF 2022-23,yes,Friday | 19 | Final exams begin
+2023-05-22,2023-05-26,Mon,Spring 2023,Final exams,exams,True,Academic Calendar,Key dates PDF 2022-23,yes,Week of | 22 | Final exams
+2023-05-30,2023-05-30,Tue,Spring 2023,Memorial Day,holiday,True,Academic Calendar,Key dates PDF 2022-23,NO,Monday | 30 | Memorial Day
+2023-06-01,2023-06-01,Thu,Summer 2023,Commencement activities,commencement,False,Academic Calendar,Key dates PDF 2022-23,yes,Thursday | 1 | Commencement activities
+2023-06-01,2023-06-01,Thu,Summer 2023,Summer pre-registration deadline,registration,False,Academic Calendar,Key dates PDF 2022-23,yes,Thursday | 1 | Summer pre-registration deadline
+2023-06-02,2023-06-02,Fri,Summer 2023,Commencement activities,commencement,False,Academic Calendar,Key dates PDF 2022-23,yes,Friday | 2 | Commencement activities
+2023-08-24,2023-08-24,Thu,Fall 2023,Pre-registration closes (5 PM),registration,False,Academic Calendar,Key dates PDF 2023-24,yes,Thursday | 24 | Pre-registration closes (5 PM)
+2023-08-28,2023-08-28,Mon,Fall 2023,Fall registration opens,registration,False,Academic Calendar,Key dates PDF 2023-24,yes,Monday | 28 | Fall registration opens
+2023-09-04,2023-09-04,Mon,Fall 2023,Labor Day holiday,holiday,True,Academic Calendar,Key dates PDF 2023-24,yes,Monday | 4 | Labor Day holiday
+2023-09-05,2023-09-05,Tue,Fall 2023,Registration Day,registration,False,Academic Calendar,Key dates PDF 2023-24,yes,Tuesday | 5 | Registration Day
+2023-09-06,2023-09-06,Wed,Fall 2023,First day of classes,term_start,False,Academic Calendar,Key dates PDF 2023-24,yes,Wednesday | 6 | First day of classes
+2023-09-08,2023-09-08,Fri,Fall 2023,Registration deadline,registration,False,Academic Calendar,Key dates PDF 2023-24,yes,Friday | 8 | Registration deadline
+2023-09-15,2023-09-15,Fri,Fall 2023,Last day to add H1 classes,deadline,False,Academic Calendar,Key dates PDF 2023-24,yes,Friday | 15 | Last day to add H1 classes
+2023-10-06,2023-10-06,Fri,Fall 2023,Add Date,deadline,False,Academic Calendar,Key dates PDF 2023-24,yes,Friday | 6 | Add Date
+2023-10-09,2023-10-09,Mon,Fall 2023,Indigenous Peoples’ Day,holiday,True,Academic Calendar,Key dates PDF 2023-24,yes,Monday | 9 | Indigenous Peoples’ Day
+2023-10-16,2023-10-20,Mon,Fall 2023,Half-term (H1) subjects final exam period,halfterm_exams,False,Academic Calendar,Key dates PDF 2023-24,yes,Week of | 16 | Half-term (H1) subjects final exam period
+2023-11-03,2023-11-03,Fri,Fall 2023,Last day to add H2 subjects,deadline,False,Academic Calendar,Key dates PDF 2023-24,yes,Friday | 3 | Last day to add H2 subjects
+2023-11-10,2023-11-10,Fri,Fall 2023,Veterans Day,holiday,True,Academic Calendar,Key dates PDF 2023-24,yes,Friday | 10 | Veterans Day
+2023-11-22,2023-11-22,Wed,Fall 2023,Drop Date,deadline,False,Academic Calendar,Key dates PDF 2023-24,yes,Wednesday | 22 | Drop Date
+2023-11-23,2023-11-23,Thu,Fall 2023,Thanksgiving,holiday,True,Academic Calendar,Key dates PDF 2023-24,yes,Thursday | 23 | Thanksgiving
+2023-11-24,2023-11-24,Fri,Fall 2023,Institute holiday,holiday,True,Academic Calendar,Key dates PDF 2023-24,yes,Friday | 24 | Institute holiday
+2023-11-29,2023-11-29,Wed,Fall 2023,Last day to drop H2 subjects,deadline,False,Academic Calendar,Key dates PDF 2023-24,yes,Wednesday | 29 | Last day to drop H2 subjects
+2023-12-01,2023-12-01,Fri,Fall 2023,Pre-registration for IAP and spring opens,registration,False,Academic Calendar,Key dates PDF 2023-24,yes,Friday | 1 | Pre-registration for IAP and spring opens
+2023-12-13,2023-12-13,Wed,Fall 2023,Last day of classes,term_end,False,Academic Calendar,Key dates PDF 2023-24,yes,Wednesday | 13 | Last day of classes
+2023-12-18,2023-12-22,Mon,Fall 2023,Final exams,exams,True,Academic Calendar,Key dates PDF 2023-24,yes,Week of | 18 | Final exams
+2024-01-08,2024-01-08,Mon,IAP 2024,IAP and spring pre-registration deadlines,registration,False,Academic Calendar,Key dates PDF 2023-24,yes,Monday | 8 | IAP and spring pre-registration deadlines
+2024-01-08,2024-01-08,Mon,IAP 2024,IAP begins,term_start,False,Academic Calendar,Key dates PDF 2023-24,yes,Monday | 8 | IAP begins
+2024-01-29,2024-02-02,Mon,IAP 2024,Registration Week,registration,False,Academic Calendar,Key dates PDF 2023-24,yes,Week of | 29 | Registration Week
+2024-02-02,2024-02-02,Fri,IAP 2024,Last day of IAP,term_end,False,Academic Calendar,Key dates PDF 2023-24,yes,Friday | 2 | Last day of IAP
+2024-02-05,2024-02-05,Mon,Spring 2024,First day of spring classes,term_start,False,Academic Calendar,Key dates PDF 2023-24,yes,Monday | 5 | First day of spring classes
+2024-02-19,2024-02-19,Mon,Spring 2024,Presidents’ Day,holiday,True,Academic Calendar,Key dates PDF 2023-24,yes,Monday | 19 | Presidents’ Day
+2024-03-08,2024-03-08,Fri,Spring 2024,Add Date,deadline,False,Academic Calendar,Key dates PDF 2023-24,yes,Friday | 8 | Add Date
+2024-03-18,2024-03-22,Mon,Spring 2024,H3 final exam week,halfterm_exams,False,Academic Calendar,Key dates PDF 2023-24,yes,Week of | 18 | H3 final exam week
+2024-04-15,2024-04-15,Mon,Spring 2024,Patriots’ Day,holiday,True,Academic Calendar,Key dates PDF 2023-24,yes,Monday | 15 | Patriots’ Day
+2024-04-23,2024-04-23,Tue,Spring 2024,Drop Date,deadline,False,Academic Calendar,Key dates PDF 2023-24,yes,Tuesday | 23 | Drop Date
+2024-05-01,2024-05-01,Wed,Spring 2024,Pre-registration for summer and fall opens,registration,False,Academic Calendar,Key dates PDF 2023-24,yes,Wednesday | 1 | Pre-registration for summer and fall opens
+2024-05-14,2024-05-14,Tue,Spring 2024,Last day of spring classes,term_end,False,Academic Calendar,Key dates PDF 2023-24,yes,Tuesday | 14 | Last day of spring classes
+2024-05-17,2024-05-17,Fri,Spring 2024,Final exams begin,exams,True,Academic Calendar,Key dates PDF 2023-24,yes,Friday | 17 | Final exams begin
+2024-05-20,2024-05-24,Mon,Spring 2024,Final exams,exams,True,Academic Calendar,Key dates PDF 2023-24,yes,Week of | 20 | Final exams
+2024-05-27,2024-05-27,Mon,Spring 2024,Memorial Day,holiday,True,Academic Calendar,Key dates PDF 2023-24,yes,Monday | 27 | Memorial Day
+2024-05-29,2024-05-29,Wed,Spring 2024,Commencement activities,commencement,False,Academic Calendar,Key dates PDF 2023-24,yes,Wednesday | 29 | Commencement activities
+2024-05-30,2024-05-30,Thu,Spring 2024,Commencement activities,commencement,False,Academic Calendar,Key dates PDF 2023-24,yes,Thursday | 30 | Commencement activities
+2024-05-30,2024-05-30,Thu,Spring 2024,Summer pre-registration deadline,registration,False,Academic Calendar,Key dates PDF 2023-24,yes,Thursday | 30 | Summer pre-registration deadline
+2024-05-31,2024-05-31,Fri,Spring 2024,Commencement activities,commencement,False,Academic Calendar,Key dates PDF 2023-24,yes,Friday | 31 | Commencement activities
+2024-08-22,2024-08-22,Thu,Fall 2024,Pre-registration closes (5 PM),registration,False,Academic Calendar,Key dates PDF 2024-25,yes,Thursday | 22 | Pre-registration closes (5 PM)
+2024-08-26,2024-08-26,Mon,Fall 2024,Fall registration opens,registration,False,Academic Calendar,Key dates PDF 2024-25,yes,Monday | 26 | Fall registration opens
+2024-09-02,2024-09-02,Mon,Fall 2024,Labor Day holiday,holiday,True,Academic Calendar,Key dates PDF 2024-25,yes,Monday | 2 | Labor Day holiday
+2024-09-03,2024-09-03,Tue,Fall 2024,Registration Day,registration,False,Academic Calendar,Key dates PDF 2024-25,yes,Tuesday | 3 | Registration Day
+2024-09-04,2024-09-04,Wed,Fall 2024,First day of classes,term_start,False,Academic Calendar,Key dates PDF 2024-25,yes,Wednesday | 4 | First day of classes
+2024-09-06,2024-09-06,Fri,Fall 2024,Registration deadline,registration,False,Academic Calendar,Key dates PDF 2024-25,yes,Friday | 6 | Registration deadline
+2024-09-13,2024-09-13,Fri,Fall 2024,Last day to add H1 classes,deadline,False,Academic Calendar,Key dates PDF 2024-25,yes,Friday | 13 | Last day to add H1 classes
+2024-10-04,2024-10-04,Fri,Fall 2024,Add Date,deadline,False,Academic Calendar,Key dates PDF 2024-25,yes,Friday | 4 | Add Date
+2024-10-10,2024-10-10,Thu,Fall 2024,Half-term (H1) subjects final exam period begins,halfterm_exams,False,Academic Calendar,Key dates PDF 2024-25,yes,Thursday | 10 | Half-term (H1) subjects final exam period begins
+2024-10-14,2024-10-14,Mon,Fall 2024,Indigenous Peoples’ Day,holiday,True,Academic Calendar,Key dates PDF 2024-25,yes,Monday | 14 | Indigenous Peoples’ Day
+2024-10-16,2024-10-18,Wed,Fall 2024,Half-term (H1) subjects final exam period,halfterm_exams,False,Academic Calendar,Key dates PDF 2024-25,check,Week of | 16 | Half-term (H1) subjects final exam period
+2024-11-01,2024-11-01,Fri,Fall 2024,Last day to add H2 subjects,deadline,False,Academic Calendar,Key dates PDF 2024-25,yes,Friday | 1 | Last day to add H2 subjects
+2024-11-11,2024-11-11,Mon,Fall 2024,Veterans Day,holiday,True,Academic Calendar,Key dates PDF 2024-25,yes,Monday | 11 | Veterans Day
+2024-11-20,2024-11-20,Wed,Fall 2024,Drop Date,deadline,False,Academic Calendar,Key dates PDF 2024-25,yes,Wednesday | 20 | Drop Date
+2024-11-27,2024-11-27,Wed,Fall 2024,Last day to drop H2 subjects,deadline,False,Academic Calendar,Key dates PDF 2024-25,yes,Wednesday | 27 | Last day to drop H2 subjects
+2024-11-28,2024-11-28,Thu,Fall 2024,Thanksgiving,holiday,True,Academic Calendar,Key dates PDF 2024-25,yes,Thursday | 28 | Thanksgiving
+2024-11-29,2024-11-29,Fri,Fall 2024,Institute holiday,holiday,True,Academic Calendar,Key dates PDF 2024-25,yes,Friday | 29 | Institute holiday
+2024-12-02,2024-12-02,Mon,Fall 2024,Pre-registration for IAP and spring opens,registration,False,Academic Calendar,Key dates PDF 2024-25,yes,Monday | 2 | Pre-registration for IAP and spring opens
+2024-12-11,2024-12-11,Wed,Fall 2024,Last day of classes,term_end,False,Academic Calendar,Key dates PDF 2024-25,yes,Wednesday | 11 | Last day of classes
+2024-12-16,2024-12-20,Mon,Fall 2024,Final exams,exams,True,Academic Calendar,Key dates PDF 2024-25,yes,Week of | 16 | Final exams
+2025-01-06,2025-01-06,Mon,IAP 2025,IAP and spring pre-registration deadlines,registration,False,Academic Calendar,Key dates PDF 2024-25,yes,Monday | 6 | IAP and spring pre-registration deadlines
+2025-01-06,2025-01-06,Mon,IAP 2025,IAP begins,term_start,False,Academic Calendar,Key dates PDF 2024-25,yes,Monday | 6 | IAP begins
+2025-01-27,2025-01-31,Mon,IAP 2025,Registration Week,registration,False,Academic Calendar,Key dates PDF 2024-25,yes,Week of | 27 | Registration Week
+2025-01-31,2025-01-31,Fri,IAP 2025,Last day of IAP,term_end,False,Academic Calendar,Key dates PDF 2024-25,yes,Friday | 31 | Last day of IAP
+2025-02-03,2025-02-03,Mon,Spring 2025,First day of spring classes,term_start,False,Academic Calendar,Key dates PDF 2024-25,yes,Monday | 3 | First day of spring classes
+2025-02-17,2025-02-17,Mon,Spring 2025,Presidents’ Day,holiday,True,Academic Calendar,Key dates PDF 2024-25,yes,Monday | 17 | Presidents’ Day
+2025-03-07,2025-03-07,Fri,Spring 2025,Add Date,deadline,False,Academic Calendar,Key dates PDF 2024-25,yes,Friday | 7 | Add Date
+2025-03-17,2025-03-21,Mon,Spring 2025,H3 final exam week,halfterm_exams,False,Academic Calendar,Key dates PDF 2024-25,yes,Week of | 17 | H3 final exam week
+2025-04-21,2025-04-21,Mon,Spring 2025,Patriots’ Day,holiday,True,Academic Calendar,Key dates PDF 2024-25,yes,Monday | 21 | Patriots’ Day
+2025-04-22,2025-04-22,Tue,Spring 2025,Drop Date,deadline,False,Academic Calendar,Key dates PDF 2024-25,yes,Tuesday | 22 | Drop Date
+2025-05-01,2025-05-01,Thu,Spring 2025,Pre-registration for summer and fall opens,registration,False,Academic Calendar,Key dates PDF 2024-25,yes,Thursday | 1 | Pre-registration for summer and fall opens
+2025-05-13,2025-05-13,Tue,Spring 2025,Last day of spring classes,term_end,False,Academic Calendar,Key dates PDF 2024-25,yes,Tuesday | 13 | Last day of spring classes
+2025-05-16,2025-05-16,Fri,Spring 2025,Final exams begin,exams,True,Academic Calendar,Key dates PDF 2024-25,yes,Friday | 16 | Final exams begin
+2025-05-19,2025-05-23,Mon,Spring 2025,Final exams,exams,True,Academic Calendar,Key dates PDF 2024-25,yes,Week of | 19 | Final exams
+2025-05-26,2025-05-26,Mon,Spring 2025,Memorial Day,holiday,True,Academic Calendar,Key dates PDF 2024-25,yes,Monday | 26 | Memorial Day
+2025-05-28,2025-05-28,Wed,Spring 2025,Commencement activities,commencement,False,Academic Calendar,Key dates PDF 2024-25,yes,Wednesday | 28 | Commencement activities
+2025-05-29,2025-05-29,Thu,Spring 2025,Commencement activities,commencement,False,Academic Calendar,Key dates PDF 2024-25,yes,Thursday | 29 | Commencement activities
+2025-05-29,2025-05-29,Thu,Spring 2025,Summer pre-registration deadline,registration,False,Academic Calendar,Key dates PDF 2024-25,yes,Thursday | 29 | Summer pre-registration deadline
+2025-05-30,2025-05-30,Fri,Spring 2025,Commencement activities,commencement,False,Academic Calendar,Key dates PDF 2024-25,yes,Friday | 30 | Commencement activities
+2025-08-21,2025-08-21,Thu,Fall 2025,Pre-registration closes (5 PM),registration,False,Academic Calendar,Key dates PDF 2025-26,yes,Thursday | 21 | Pre-registration closes (5 PM)
+2025-08-25,2025-08-25,Mon,Fall 2025,Fall registration opens,registration,False,Academic Calendar,Key dates PDF 2025-26,yes,Monday | 25 | Fall registration opens
+2025-09-01,2025-09-01,Mon,Fall 2025,Labor Day holiday,holiday,True,Academic Calendar,Key dates PDF 2025-26,yes,Monday | 1 | Labor Day holiday
+2025-09-02,2025-09-02,Tue,Fall 2025,Registration Day,registration,False,Academic Calendar,Key dates PDF 2025-26,yes,Tuesday | 2 | Registration Day
+2025-09-03,2025-09-03,Wed,Fall 2025,First day of classes,term_start,False,Academic Calendar,Key dates PDF 2025-26,yes,Wednesday | 3 | First day of classes
+2025-09-05,2025-09-05,Fri,Fall 2025,Registration deadline,registration,False,Academic Calendar,Key dates PDF 2025-26,yes,Friday | 5 | Registration deadline
+2025-09-12,2025-09-12,Fri,Fall 2025,Last day to add H1 classes,deadline,False,Academic Calendar,Key dates PDF 2025-26,yes,Friday | 12 | Last day to add H1 classes
+2025-10-03,2025-10-03,Fri,Fall 2025,Add Date,deadline,False,Academic Calendar,Key dates PDF 2025-26,yes,Friday | 3 | Add Date
+2025-10-10,2025-10-10,Fri,Fall 2025,Half-term (H1) subjects final exam period begins,halfterm_exams,False,Academic Calendar,Key dates PDF 2025-26,yes,Friday | 10 | Half-term (H1) subjects final exam period begins
+2025-10-13,2025-10-13,Mon,Fall 2025,Indigenous Peoples’ Day,holiday,True,Academic Calendar,Key dates PDF 2025-26,yes,Monday | 13 | Indigenous Peoples’ Day
+2025-10-14,2025-10-17,Tue,Fall 2025,Half-term (H1) subjects final exam period,halfterm_exams,False,Academic Calendar,Key dates PDF 2025-26,check,Week of | 14 | Half-term (H1) subjects final exam period
+2025-10-31,2025-10-31,Fri,Fall 2025,Last day to add H2 subjects,deadline,False,Academic Calendar,Key dates PDF 2025-26,yes,Friday | 31 | Last day to add H2 subjects
+2025-11-11,2025-11-11,Tue,Fall 2025,Veterans Day,holiday,True,Academic Calendar,Key dates PDF 2025-26,NO,Monday | 11 | Veterans Day
+2025-11-19,2025-11-19,Wed,Fall 2025,Drop Date,deadline,False,Academic Calendar,Key dates PDF 2025-26,yes,Wednesday | 19 | Drop Date
+2025-11-26,2025-11-26,Wed,Fall 2025,Last day to drop H2 subjects,deadline,False,Academic Calendar,Key dates PDF 2025-26,yes,Wednesday | 26 | Last day to drop H2 subjects
+2025-11-27,2025-11-27,Thu,Fall 2025,Thanksgiving,holiday,True,Academic Calendar,Key dates PDF 2025-26,yes,Thursday | 27 | Thanksgiving
+2025-11-28,2025-11-28,Fri,Fall 2025,Institute holiday,holiday,True,Academic Calendar,Key dates PDF 2025-26,yes,Friday | 28 | Institute holiday
+2025-12-01,2025-12-01,Mon,Fall 2025,Pre-registration for IAP and spring opens,registration,False,Academic Calendar,Key dates PDF 2025-26,yes,Monday | 1 | Pre-registration for IAP and spring opens
+2025-12-10,2025-12-10,Wed,Fall 2025,Last day of classes,term_end,False,Academic Calendar,Key dates PDF 2025-26,yes,Wednesday | 10 | Last day of classes
+2025-12-15,2025-12-19,Mon,Fall 2025,Final exams,exams,True,Academic Calendar,Key dates PDF 2025-26,yes,Week of | 15 | Final exams
+2026-01-05,2026-01-05,Mon,IAP 2026,IAP and spring pre-registration deadlines,registration,False,Academic Calendar,Key dates PDF 2025-26,yes,Monday | 5 | IAP and spring pre-registration deadlines
+2026-01-05,2026-01-05,Mon,IAP 2026,IAP begins,term_start,False,Academic Calendar,Key dates PDF 2025-26,yes,Monday | 5 | IAP begins
+2026-01-26,2026-01-30,Mon,IAP 2026,Registration Week,registration,False,Academic Calendar,Key dates PDF 2025-26,yes,Week of | 26 | Registration Week
+2026-01-30,2026-01-30,Fri,IAP 2026,Last day of IAP,term_end,False,Academic Calendar,Key dates PDF 2025-26,yes,Friday | 30 | Last day of IAP
+2026-02-02,2026-02-02,Mon,Spring 2026,First day of spring classes,term_start,False,Academic Calendar,Key dates PDF 2025-26,yes,Monday | 2 | First day of spring classes
+2026-02-16,2026-02-16,Mon,Spring 2026,Presidents’ Day,holiday,True,Academic Calendar,Key dates PDF 2025-26,yes,Monday | 16 | Presidents’ Day
+2026-03-06,2026-03-06,Fri,Spring 2026,Add Date,deadline,False,Academic Calendar,Key dates PDF 2025-26,yes,Friday | 6 | Add Date
+2026-03-16,2026-03-20,Mon,Spring 2026,H3 final exam week,halfterm_exams,False,Academic Calendar,Key dates PDF 2025-26,yes,Week of | 16 | H3 final exam week
+2026-04-20,2026-04-20,Mon,Spring 2026,Patriots’ Day,holiday,True,Academic Calendar,Key dates PDF 2025-26,yes,Monday | 20 | Patriots’ Day
+2026-04-21,2026-04-21,Tue,Spring 2026,Drop Date,deadline,False,Academic Calendar,Key dates PDF 2025-26,yes,Tuesday | 21 | Drop Date
+2026-05-01,2026-05-01,Fri,Spring 2026,Pre-registration for summer and fall opens,registration,False,Academic Calendar,Key dates PDF 2025-26,yes,Friday | 1 | Pre-registration for summer and fall opens
+2026-05-12,2026-05-12,Tue,Spring 2026,Last day of spring classes,term_end,False,Academic Calendar,Key dates PDF 2025-26,yes,Tuesday | 12 | Last day of spring classes
+2026-05-15,2026-05-15,Fri,Spring 2026,Final exams begin,exams,True,Academic Calendar,Key dates PDF 2025-26,yes,Friday | 15 | Final exams begin
+2026-05-18,2026-05-22,Mon,Spring 2026,Final exams,exams,True,Academic Calendar,Key dates PDF 2025-26,yes,Week of | 18 | Final exams
+2026-05-25,2026-05-25,Mon,Spring 2026,Memorial Day,holiday,True,Academic Calendar,Key dates PDF 2025-26,yes,Monday | 25 | Memorial Day
+2026-05-27,2026-05-27,Wed,Spring 2026,Commencement activities,commencement,False,Academic Calendar,Key dates PDF 2025-26,yes,Wednesday | 27 | Commencement activities
+2026-05-28,2026-05-28,Thu,Spring 2026,Commencement activities,commencement,False,Academic Calendar,Key dates PDF 2025-26,yes,Thursday | 28 | Commencement activities
+2026-05-28,2026-05-28,Thu,Spring 2026,Summer pre-registration deadline,registration,False,Academic Calendar,Key dates PDF 2025-26,yes,Thursday | 28 | Summer pre-registration deadline
+2026-05-29,2026-05-29,Fri,Spring 2026,Commencement activities,commencement,False,Academic Calendar,Key dates PDF 2025-26,yes,Friday | 29 | Commencement activities
+2026-09-07,2026-09-07,Mon,Fall 2026,Labor Day,holiday,True,Academic Calendar,Registrar key dates page,,September | 7 | Monday | Labor Day
+2026-09-08,2026-09-08,Tue,Fall 2026,Registration Day — fall term,registration,False,Academic Calendar,Registrar key dates page,,8 | Tuesday | Registration Day — fall term
+2026-09-09,2026-09-09,Wed,Fall 2026,First day of classes,term_start,False,Academic Calendar,Registrar key dates page,,9 | Wednesday | First day of classes
+2026-10-12,2026-10-12,Mon,Fall 2026,Indigenous Peoples Day — holiday,holiday,True,Academic Calendar,Registrar key dates page,,October | 12 | Monday | Indigenous Peoples Day — holiday
+2026-10-13,2026-10-13,Tue,Fall 2026,Monday schedule of classes,schedule_swap,False,Academic Calendar,Registrar key dates page,,13 | Tuesday | Monday schedule of classes
+2026-11-11,2026-11-11,Wed,Fall 2026,Veterans Day — holiday,holiday,True,Academic Calendar,Registrar key dates page,,November | 11 | Wednesday | Veterans Day — holiday
+2026-11-26,2026-11-27,Thu,Fall 2026,Thanksgiving holiday,holiday,True,Academic Calendar,Registrar key dates page,,26-27 | Thurs-Fri | Thanksgiving holiday
+2026-12-10,2026-12-10,Thu,Fall 2026,Last day of classes,term_end,False,Academic Calendar,Registrar key dates page,,December | 10 | Thursday | Last day of classes
+2026-12-14,2026-12-18,Mon,Fall 2026,Final exams,exams,True,Academic Calendar,Registrar key dates page,,14-18 | Mon-Fri | Final exams
+2027-01-04,2027-01-04,Mon,IAP 2027,IAP begins,term_start,False,Academic Calendar,Registrar key dates page,,January | 4 | Monday | IAP begins
+2027-01-18,2027-01-18,Mon,IAP 2027,"Martin Luther King, Jr. Day — holiday",holiday,True,Academic Calendar,Registrar key dates page,,"18 | Monday | Martin Luther King, Jr. Day — holiday"
+2027-01-25,2027-01-29,Mon,Spring 2027,Registration Week — spring term,registration,False,Academic Calendar,Registrar key dates page,,25-29 | Mon-Fri | Registration Week — spring term
+2027-01-29,2027-01-29,Fri,IAP 2027,IAP ends,term_end,False,Academic Calendar,Registrar key dates page,,29 | Friday | IAP ends
+2027-02-01,2027-02-01,Mon,Spring 2027,First day of classes,term_start,False,Academic Calendar,Registrar key dates page,,February | 1 | Monday | First day of classes
+2027-02-15,2027-02-15,Mon,Spring 2027,Presidents' Day — holiday,holiday,True,Academic Calendar,Registrar key dates page,,15 | Monday | Presidents' Day — holiday
+2027-02-16,2027-02-16,Tue,Spring 2027,Monday schedule of classes,schedule_swap,False,Academic Calendar,Registrar key dates page,,16 | Tuesday | Monday schedule of classes
+2027-03-22,2027-03-26,Mon,Spring 2027,Spring break,break,True,Academic Calendar,Registrar key dates page,,March | 22-26 | Mon-Fri | Spring break
+2027-04-19,2027-04-19,Mon,Spring 2027,Patriots' Day — holiday,holiday,True,Academic Calendar,Registrar key dates page,,April | 19 | Monday | Patriots' Day — holiday
+2027-05-11,2027-05-11,Tue,Spring 2027,Last day of classes,term_end,False,Academic Calendar,Registrar key dates page,,May | 11 | Tuesday | Last day of classes
+2027-05-14,2027-05-14,Fri,Spring 2027,Final exams,exams,True,Academic Calendar,Registrar key dates page,,"14, 17-19 | Fri, Mon-Wed | Final exams"
+2027-05-17,2027-05-19,Mon,Spring 2027,Final exams,exams,True,Academic Calendar,Registrar key dates page,,"14, 17-19 | Fri, Mon-Wed | Final exams"
+2027-05-26,2027-05-28,Wed,Spring 2027,Commencement activities,commencement,False,Academic Calendar,Registrar key dates page,,26-28 | Wed-Fri | Commencement activities
+2027-06-07,2027-08-17,Mon,Summer 2027,Summer session (incl. exam period),term,False,Academic Calendar,Registrar key dates page,,June 7 - August 17 | Summer session (incl. exam period)

@@ -12,7 +12,8 @@ plus summary CSVs (class start/end times, weekly busy hours, games by day and ho
 
 Output (in the --out folder, default mit_events_data/):
   sports_games.csv, academic_calendar.csv, class_meetings.csv,
-  summary_class_start_end_times.csv, summary_class_busy_hours.csv, summary_games_by_day_hour.csv
+  summary_class_start_end_times.csv, summary_class_busy_hours.csv, summary_games_by_day_hour.csv,
+  practice_blocks.csv
 
 Usage
 -----
@@ -20,6 +21,9 @@ Usage
     python mit_events_scraper.py                       # writes CSVs to mit_events_data/
     python mit_events_scraper.py --past-calendars      # + 2021-22 .. 2025-26 calendars
     python mit_events_scraper.py --sports-since 2019   # + every team's past seasons since 2019
+
+Also writes practice_blocks.csv: an assumed 5-7 PM practice block on every in-term weekday
+that isn't a holiday or break (see build_practice_blocks; change with --practice-time).
     python mit_events_scraper.py --calendar-pdfs ~/Downloads/Key_dates_2022-23.pdf
     python mit_events_scraper.py -o my_folder --save-html cache/
     python mit_events_scraper.py --skip classes        # skip a part (sports|calendar|classes)
@@ -785,6 +789,94 @@ def scrape_classes(f: Fetcher, local_json: Path | None) -> list[dict]:
     return rows
 
 
+# practice blocks
+
+def load_calendar_csv(path: Path) -> list[dict]:
+    """Read a previously written academic_calendar.csv (used when --skip calendar)."""
+    rows = []
+    with path.open(encoding="utf-8-sig", newline="") as fh:
+        for r in csv.DictReader(fh):
+            rows.append(dict(start=date.fromisoformat(r["start_date"]), end=date.fromisoformat(r["end_date"]),
+                             term=r["term"], event=r["event"], category=r["category"],
+                             no_classes=r["no_classes"] == "True", office=r.get("office", ""),
+                             source=r.get("source", "")))
+    return rows
+
+
+def build_practice_blocks(calendar: list[dict], start_hm: str = "17:00", end_hm: str = "19:00",
+                          skip_exams: bool = False) -> list[dict]:
+    """One assumed practice block per in-term weekday.
+
+    In term = first day of fall classes .. end of fall finals, IAP begins .. IAP ends, and
+    first day of spring classes .. end of spring finals. Holidays and breaks are left out.
+    When a year's calendar has no spring break (the older PDFs omit it), it is taken to be
+    the Mon-Fri week right after H3 exam week, the pattern in the years that list both.
+    """
+    from datetime import timedelta
+    by_ay: dict[int, list[dict]] = {}
+    for r in calendar:
+        if r.get("office", "Academic Calendar") not in ("", "Academic Calendar"):
+            continue
+        ay = r["start"].year if r["start"].month >= 7 else r["start"].year - 1
+        by_ay.setdefault(ay, []).append(r)
+
+    def find(rows, rx, months):
+        hits = [r for r in rows if r["start"].month in months and re.search(rx, r["event"], re.I)]
+        return sorted(hits, key=lambda r: r["start"])
+
+    blocks = []
+    for ay, rows in sorted(by_ay.items()):
+        fall = find(rows, r"first day of (fall )?classes", (8, 9))
+        fall_exams = find(rows, r"final exam", (12,))
+        iap_start = find(rows, r"iap begins", (1,))
+        iap_end = find(rows, r"last day of iap|iap ends", (1, 2))
+        spring = find(rows, r"first day of (spring )?classes", (1, 2))
+        spring_exams = find(rows, r"final exam", (5, 6))
+        terms = []
+        if fall and fall_exams:
+            terms.append(("Fall", fall[0]["start"], max(r["end"] for r in fall_exams)))
+        if iap_start and iap_end:
+            terms.append(("IAP", iap_start[0]["start"], iap_end[-1]["start"]))
+        if spring and spring_exams:
+            terms.append(("Spring", spring[0]["start"], max(r["end"] for r in spring_exams)))
+        if not terms:
+            continue
+        missing = [t for t, ok in (("fall", fall and fall_exams), ("IAP", iap_start and iap_end),
+                                   ("spring", spring and spring_exams)) if not ok]
+        if missing:
+            log(f"  practice {ay}-{str(ay + 1)[2:]}: no start/end found for {', '.join(missing)}; skipped")
+
+        off: dict[date, str] = {}
+        for r in rows:
+            if r["category"] in ("holiday", "break") or (skip_exams and r["category"] == "exams"):
+                d = r["start"]
+                while d <= r["end"]:
+                    off[d] = r["event"]
+                    d += timedelta(days=1)
+        if not any(re.search(r"martin luther|\bmlk\b", r["event"], re.I) for r in rows):
+            jan1 = date(ay + 1, 1, 1)                 # MLK Day: third Monday of January (older PDFs omit it)
+            off.setdefault(jan1 + timedelta(days=(7 - jan1.weekday()) % 7 + 14), "Martin Luther King, Jr. Day")
+        if not any(r["category"] == "break" and r["start"].month in (3, 4) for r in rows):
+            h3 = find(rows, r"\bh3\b", (3,))
+            if h3:
+                mon = h3[-1]["end"] + timedelta(days=(7 - h3[-1]["end"].weekday()) % 7 or 7)
+                for k in range(5):
+                    off[mon + timedelta(days=k)] = "Spring break (inferred: week after H3 exams)"
+                log(f"  practice {ay}-{str(ay + 1)[2:]}: spring break not listed; "
+                    f"assumed {mon:%b %d}-{mon + timedelta(days=4):%d}")
+            else:
+                log(f"  practice {ay}-{str(ay + 1)[2:]}: spring break not listed and can't be inferred")
+
+        for term, lo, hi in terms:
+            d = lo
+            while d <= hi:
+                if d.weekday() < 5 and d not in off:
+                    blocks.append(dict(date=d, term=term, academic_year=f"{ay}-{str(ay + 1)[2:]}",
+                                       start=start_hm, end=end_hm))
+                d += timedelta(days=1)
+    return blocks
+
+
 # csv output
 
 def _write(path: Path, header: list[str], rows: list[list]) -> None:
@@ -799,7 +891,8 @@ def hhmm(minutes: int) -> str:
     return f"{minutes // 60:02d}:{minutes % 60:02d}"
 
 
-def write_csvs(sports: list[dict], calendar: list[dict], classes: list[dict], out_dir: Path) -> list[Path]:
+def write_csvs(sports: list[dict], calendar: list[dict], classes: list[dict], out_dir: Path,
+               practice: list[dict] | None = None) -> list[Path]:
     """Raw data plus pre-computed summaries (CSV can't hold formulas)."""
     out_dir.mkdir(parents=True, exist_ok=True)
     written = []
@@ -832,6 +925,14 @@ def write_csvs(sports: list[dict], calendar: list[dict], classes: list[dict], ou
              [[r["start"].isoformat(), r["end"].isoformat(), WEEKDAYS[r["start"].weekday()], r["term"],
                r["event"], r["category"], r["no_classes"], r.get("office", ""), r.get("source", ""),
                r.get("weekday_ok", ""), r.get("raw", "")] for r in calendar])
+
+    # assumed: weekday practice blocks
+    if practice:
+        save("practice_blocks.csv",
+             ["date", "weekday", "start_time", "end_time", "academic_year", "term", "event", "source"],
+             [[b["date"].isoformat(), WEEKDAYS[b["date"].weekday()], b["start"], b["end"], b["academic_year"],
+               b["term"], "Varsity team practice (typical)",
+               "assumed: every in-term weekday that isn't a holiday or break"] for b in practice])
 
     # raw: class meetings
     if classes:
@@ -883,6 +984,11 @@ def main() -> None:
                     help="keep the PDFs' catalog/schedules/committee dates too, not just the academic calendar")
     ap.add_argument("--delay", type=float, default=1.0, help="seconds between requests (default 1)")
     ap.add_argument("--save-html", type=Path, help="folder to keep every fetched page for debugging")
+    ap.add_argument("--no-practice", action="store_true", help="don't write practice_blocks.csv")
+    ap.add_argument("--practice-time", default="17:00-19:00", metavar="HH:MM-HH:MM",
+                    help="daily practice window (default 17:00-19:00)")
+    ap.add_argument("--practice-skip-exams", action="store_true",
+                    help="leave final-exam days out of the practice blocks")
     a = ap.parse_args()
 
     f = Fetcher(a.delay, a.save_html)
@@ -890,7 +996,20 @@ def main() -> None:
     pdfs = (KEY_DATES_PDFS if a.past_calendars else []) + a.calendar_pdfs
     calendar = [] if "calendar" in a.skip else scrape_calendar(f, pdfs, a.all_offices)
     classes = [] if "classes" in a.skip else scrape_classes(f, a.classes_json)
-    written = write_csvs(sports, calendar, classes, Path(a.out))
+    practice = []
+    if not a.no_practice:
+        cal = calendar
+        saved = Path(a.out) / "academic_calendar.csv"
+        if not cal and saved.exists():            # e.g. --skip calendar: reuse the last saved calendar
+            cal = load_calendar_csv(saved)
+        if cal:
+            log("practice blocks:")
+            p_start, p_end = a.practice_time.split("-")
+            practice = build_practice_blocks(cal, p_start.strip(), p_end.strip(), a.practice_skip_exams)
+            log(f"  {len(practice)} weekday blocks")
+        else:
+            log("practice blocks: skipped (no academic calendar yet; run without --skip calendar)")
+    written = write_csvs(sports, calendar, classes, Path(a.out), practice)
     log(f"wrote {len(written)} CSV files to {a.out}/: {len(sports)} games, "
         f"{len(calendar)} calendar dates, {len(classes)} class meetings")
     for p in written:

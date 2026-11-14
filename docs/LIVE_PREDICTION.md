@@ -1,6 +1,6 @@
 # Live Prediction Model — Design Summary
 
-Status: **draft for approval**. Nothing is implemented yet.
+Status: **replay and evaluation implemented** in `live_prediction_model/`. Not yet hooked into the live collector; no TomTom data yet.
 
 Every 30 seconds, the model takes each bus's live GPS position, the last bus's travel time and dwell at each stop, and TomTom's travel time for each leg, and outputs the predicted time in seconds until the bus reaches each of its next 1–4 stops.
 
@@ -45,6 +45,8 @@ r        distance left on the current leg = p1 - x
 T_last     = last bus's travel time on leg i
              = arrival(si) - last time inside s(i-1)
 T_tomtom   = latest TomTom travel time for leg i (refreshed every 5 min)
+             TomTom follows the shuttle's route shape; leg times are read off its time along the loop
+             skipped if older than 15 min, or if TomTom's leg length differs >25% from the shuttle's
 T_fallback = Li / default_speed,  default_speed ≈ 5 m/s
 
 T_i = Σ (w_s · T_s) / Σ w_s        over available sources s ∈ {last, tomtom, fallback}
@@ -61,7 +63,19 @@ ETA(s2) = t1 + d1 + T2
 ETA(s3) = t1 + d1 + T2 + d2 + T3
 ETA(s4) = t1 + d1 + T2 + d2 + T3 + d3 + T4
 
+## Run
+```bash
+# Collect TomTom leg times every 5 min (needs TOMTOM_API_KEY in .env) -> data/traffic_legs.csv
+.venv/bin/python live_data_collection/collection/live_traffic.py
+# All real sessions, scored against Passio on the same checkpoint/target pairs
+.venv/bin/python -m live_prediction_model.evaluate_live
+# Other settings (defaults: weights 0.45 / 0.45 / 0.1, 5 m/s, 30 s dwell)
+.venv/bin/python -m live_prediction_model.evaluate_live --w-fallback 0 --default-speed-mps 4
+# Simulated days instead of real sessions
+.venv/bin/python -m live_prediction_model.evaluate_live --sim-day 2026-11-10
+```
+Outputs: `results/evaluation/live/` (errors, coverage, summaries, `live_vs_passio_all.csv`).
+`--save-predictions` also writes every prediction.
+
 ## Open questions
-- Routes: Boston Daytime only first, or both?
-- Starting weights: last / TomTom / fallback = 0.45 / 0.45 / 0.1?
 - Live output: save to CSV in `results/`, or print only?

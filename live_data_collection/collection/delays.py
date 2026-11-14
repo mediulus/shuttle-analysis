@@ -2,7 +2,7 @@ from pathlib import Path
 import pandas as pd
 
 
-CSV = Path(__file__).resolve().parent.parent / "data" / "route_log.csv"
+CSV = Path(__file__).resolve().parents[2] / "data" / "traffic_legs.csv"
 df = pd.read_csv(CSV, parse_dates=["collected_at_utc"])
 
 # Per-leg congestion measures
@@ -15,7 +15,8 @@ df["hour"] = df["local_time"].dt.hour
 
 # Readable leg label; zero-padded so leg 10 sorts after leg 9
 df["leg_name"] = (
-    df["leg"].astype(int).map("{:02d}".format) + ": " + df["from_stop"] + " -> " + df["to_stop"]
+    df["route_name"] + " " + df["leg"].astype(int).map("{:02d}".format) + ": "
+    + df["from_stop"] + " -> " + df["to_stop"]
 )
 
 # 1) Latest snapshot: how is each leg doing right now?

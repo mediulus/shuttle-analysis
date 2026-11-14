@@ -1,4 +1,5 @@
 import csv
+import gzip
 import json
 from pathlib import Path
 
@@ -76,8 +77,13 @@ class CSVStorage:
         return self.data_dir / OBSERVATION_FILES[request_type]
 
     def read_session_metadata(self):
-        """Load this session's complete snapshot without modifying it."""
-        snapshot = json.loads(self._metadata_path().read_text(encoding="utf-8"))
+        """Load a JSON snapshot, or its .json.gz equivalent, without modifying it."""
+        path = self._metadata_path()
+        if path.exists():
+            snapshot = json.loads(path.read_text(encoding="utf-8"))
+        else:
+            with gzip.open(str(path) + ".gz", "rt", encoding="utf-8") as file:
+                snapshot = json.load(file)
         if snapshot["session_id"] != self.session_id:
             raise ValueError("Snapshot session ID does not match requested session")
         return snapshot
@@ -90,13 +96,15 @@ class CSVStorage:
         (header is row 1). Keep failed requests for discontinuity handling.
         ETA reads combine the original and route-aware files when present;
         route_id is restored for rows in the new format.
+        A .csv.gz file is accepted when its plain CSV counterpart is absent.
         This is a read-only operation; malformed JSON or missing fields raise.
         """
         legacy_path = self._observation_path(request_type)
         paths = [legacy_path]
         if request_type == "eta":
             route_path = self.data_dir / ROUTE_ETA_FILE
-            paths = [path for path in (legacy_path, route_path) if path.exists()]
+            paths = [path for path in (legacy_path, route_path)
+                     if path.exists() or Path(str(path) + ".gz").exists()]
             if not paths:
                 paths = [legacy_path]
         observations = []
@@ -107,7 +115,10 @@ class CSVStorage:
     def _read_observation_file(self, path, request_type):
         """Restore one schema while retaining the exact source filename/row."""
         observations = []
-        with path.open(newline="", encoding="utf-8") as file:
+        compressed = not path.exists() and Path(str(path) + ".gz").exists()
+        source = Path(str(path) + ".gz") if compressed else path
+        opener = gzip.open if compressed else open
+        with opener(source, "rt", newline="", encoding="utf-8") as file:
             for row_number, row in enumerate(csv.DictReader(file), 2):
                 if row["session_id"] != self.session_id:
                     continue
@@ -120,7 +131,7 @@ class CSVStorage:
                     "stop_id": row["stop_id"] or None,
                     "data": json.loads(row["data"]),
                     "error": row["error"] or None,
-                    "source_ref": {"file": path.name, "csv_row": row_number},
+                    "source_ref": {"file": source.name, "csv_row": row_number},
                 }
                 if "route_id" in row:
                     observation["route_id"] = row["route_id"]
@@ -141,6 +152,8 @@ class CSVStorage:
         single filename component. Return the saved file's Path.
         """
         path = self._metadata_path()
+        if Path(str(path) + ".gz").exists():
+            raise FileExistsError(f"Compressed session metadata already exists: {path}.gz")
         snapshot = {"session_id": self.session_id, "metadata": metadata}
         serialized = json.dumps(snapshot, indent=2, allow_nan=False)
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -189,6 +202,8 @@ class CSVStorage:
             row["route_id"] = route_id
 
         self.data_dir.mkdir(parents=True, exist_ok=True)
+        if not path.exists() and Path(str(path) + ".gz").exists():
+            raise ValueError("Cannot append beside compressed observations; use a new data directory")
         with path.open("a+", newline="", encoding="utf-8") as file:
             file.seek(0)
             header = next(csv.reader(file), None)

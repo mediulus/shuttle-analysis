@@ -1,0 +1,75 @@
+{
+  "version": "1.0",
+  "seed": 1850,
+  "start_date": "2024-11-12",
+  "end_date": "2026-11-11",
+  "timezone": "America/New_York",
+  "poll_seconds": 30,
+  "buses_per_route": 1,
+  "holdout_latest_local_dates": 2,
+  "edge_shrinkage_samples": 5,
+  "fallback_speed_mps": 4.0,
+  "fallback_dwell_seconds": 12.0,
+  "day_log_sigma": 0.1,
+  "trip_log_sigma": 0.12,
+  "segment_log_sigma": 0.1,
+  "gps_noise_meters": 3.0,
+  "gps_outlier_probability": 0.001,
+  "missing_bus_probability": 0.002,
+  "stale_probability": 0.003,
+  "outage_start_probability": 0.0005,
+  "outage_seconds_range": [
+    60,
+    180
+  ],
+  "incident_probability_per_segment": 0.01,
+  "incident_seconds_range": [
+    45,
+    300
+  ],
+  "am_peak_multiplier": 1.22,
+  "pm_peak_multiplier": 1.3,
+  "evening_multiplier": 1.08,
+  "weekend_multiplier": 0.9,
+  "holiday_multiplier": 0.85,
+  "break_multiplier": 0.92,
+  "weather_multipliers": {
+    "clear": 1.0,
+    "rain": 1.12,
+    "heavy_rain": 1.25,
+    "snow": 1.45
+  },
+  "weather_probabilities": {
+    "winter": {
+      "clear": 0.67,
+      "rain": 0.18,
+      "heavy_rain": 0.05,
+      "snow": 0.1
+    },
+    "spring_fall": {
+      "clear": 0.68,
+      "rain": 0.25,
+      "heavy_rain": 0.07,
+      "snow": 0.0
+    },
+    "summer": {
+      "clear": 0.75,
+      "rain": 0.18,
+      "heavy_rain": 0.07,
+      "snow": 0.0
+    }
+  },
+  "forecast_context_response": 0.5,
+  "forecast_fractional_bias": -0.05,
+  "forecast_noise_base_seconds": 15,
+  "forecast_noise_fraction": 0.05,
+  "forecast_trip_log_sigma": 0.08,
+  "gzip_compresslevel": 3,
+  "sources": [
+    "https://web.mit.edu/facilities/transportation/docs/MITShuttlesSummary.pdf",
+    "https://web.mit.edu/facilities/transportation/shuttles/tech_shuttle.html",
+    "https://web.mit.edu/facilities/transportation/shuttles/safe_ride.html",
+    "https://hr.mit.edu/holidays",
+    "https://hr.mit.edu/holidays-prior"
+  ]
+}

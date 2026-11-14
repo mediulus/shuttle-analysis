@@ -116,3 +116,11 @@ inside a stop area, not engine idle or guaranteed stationary time.
 - [Dwell detection](docs/DWELL_DETECTOR.md)
 - [Passio prediction extraction](docs/PREDICTION_EXTRACTOR.md)
 - [Checkpoint evaluation and plots](docs/ETA_EVALUATION.md)
+
+## Trip simulation
+
+The [trip simulation](<trip simulation/README.md>) folder has two years of
+simulated Boston Daytime and Boston East trips. It uses our real data as a starting
+point, with assumptions for traffic, weather, holidays, and breaks. The simulated
+CSV files use the same format as the real collection and stay in their own folder.
+See its README for how it works and how to run it.

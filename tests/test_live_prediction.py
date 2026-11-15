@@ -51,12 +51,21 @@ class LivePredictionTests(unittest.TestCase):
         points = [(40, 0), (100, 0), (160, 0), (200, 40), (200, 100)]
         samples = [observation(x, i * 30, y=y) for i, (x, y) in enumerate(points)]
         samples = with_second_bus(samples, {3: (40, 0), 4: (100, 0)})
-        rows = at(self.predict(samples), 'second', 120)
+        rows = at(self.predict(samples, settings=Settings(min_dwell_s=0)), 'second', 120)
         # T_last(2->3) = 120 - 30 = 90 s; fallback 40 s; weights 0.45 / 0.1.
         blended = (0.45 * 90 + 0.1 * 40) / 0.55
         self.assertAlmostEqual(rows['2']['predicted_seconds'], round(blended, 1))
         self.assertEqual(rows['2']['current_stop_position'], '2')
         self.assertTrue(rows['2']['leg_sources'].startswith('last+fallback'))
+
+    def test_observed_dwell_below_minimum_is_raised(self):
+        # Same visit as above: bus 1 records a 0 s dwell at stop 1, raised to the 30 s minimum.
+        points = [(40, 0), (100, 0), (160, 0), (200, 40), (200, 100)]
+        samples = [observation(x, i * 30, y=y) for i, (x, y) in enumerate(points)]
+        samples = with_second_bus(samples, {3: (40, 0), 4: (100, 0)})
+        rows = at(self.predict(samples), 'second', 120)
+        blended = (0.45 * 90 + 0.1 * 40) / 0.55
+        self.assertAlmostEqual(rows['2']['predicted_seconds'], round(blended + 30, 1))
 
     def test_bus_inside_stop_adds_only_remaining_dwell(self):
         # Bus 1 dwells 60 s at stop 1 (known when it leaves at 120 s).

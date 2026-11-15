@@ -53,8 +53,10 @@ T_i = Σ (w_s · T_s) / Σ w_s        over available sources s ∈ {last, tomtom
 t1  = T1 · (r / L1)                 partial current leg
 
 ## Dwell
-d_i = last recorded dwell at stop si
+d_i = max(last recorded dwell at stop si, 30 s)
       → else 30 s
+      (dwell is measured between 30 s polls, so short stops often record 0 s;
+       the floor is set with --min-dwell-s)
 If the bus is inside the stop area:  d = max(0, d_i - time already spent)
 
 ## ETA

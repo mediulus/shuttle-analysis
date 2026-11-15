@@ -93,11 +93,13 @@ def main():
     parser.add_argument("--save-predictions", action="store_true", help="Also write every live prediction")
     parser.add_argument("--no-passio", action="store_true", help="Skip the Passio comparison (faster)")
     defaults = Settings()
-    for name in ("w_last", "w_tomtom", "w_fallback", "default_speed_mps", "default_dwell_s"):
+    for name in ("w_last", "w_tomtom", "w_fallback", "default_speed_mps", "default_dwell_s",
+                 "min_dwell_s"):
         parser.add_argument(f"--{name.replace('_', '-')}", type=float, default=getattr(defaults, name))
     args = parser.parse_args()
     settings = Settings(w_last=args.w_last, w_tomtom=args.w_tomtom, w_fallback=args.w_fallback,
-                        default_speed_mps=args.default_speed_mps, default_dwell_s=args.default_dwell_s)
+                        default_speed_mps=args.default_speed_mps, default_dwell_s=args.default_dwell_s,
+                        min_dwell_s=args.min_dwell_s)
     output = ROOT / "results/evaluation/live" / ("simulated" if args.sim_day else "")
     all_live, all_coverage, all_passio = [], [], []
     for session_id, data_dir in sessions_to_run(args):

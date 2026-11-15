@@ -31,6 +31,8 @@ class Settings:
     w_fallback: float = 0.10
     default_speed_mps: float = 5.0
     default_dwell_s: float = 30.0
+    # Dwell is measured between 30 s polls, so short stops often record 0 s.
+    min_dwell_s: float = 30.0
     max_stops: int = 4
     # TomTom is polled every 5 min; older readings are from a previous run or day.
     tomtom_max_age_s: float = 900.0
@@ -136,8 +138,12 @@ class LivePredictor:
         if seconds > 0:
             last_leg[(previous_arrival["route_stop_position"], arrival["route_stop_position"])] = seconds
 
-    def _leg_time(self, leg, timestamp, last_leg):
-        """Weighted average of available sources, renormalized over those present."""
+    def _leg_time(self, leg, timestamp, last_leg, at=None):
+        """Weighted average of available sources, renormalized over those present.
+
+        `at` is when the bus is expected to start the leg. The live sources only
+        use what is known at `timestamp`; the historical model looks conditions up at `at`.
+        """
         s = self.settings
         estimates = []
         if leg in last_leg:
@@ -163,8 +169,10 @@ class LivePredictor:
             return None
         return values[i - 1]
 
-    def _dwell(self, position, last_dwell):
-        return last_dwell.get(position, self.settings.default_dwell_s)
+    def _dwell(self, position, last_dwell, at=None):
+        """Dwell at a stop the bus is expected to reach at `at`."""
+        observed = last_dwell.get(position, self.settings.default_dwell_s)
+        return max(observed, self.settings.min_dwell_s)
 
     def _predict_bus(self, bus_id, coord, progress, timestamp, last_arrival, last_leg, last_dwell):
         route = self.route
@@ -184,7 +192,7 @@ class LivePredictor:
         # Partial current leg: t1 = T1 * (r / L1).
         first = sequence[0]
         leg = (stops[(next_index - 1) % n]["position"], first["position"])
-        leg_seconds, source = self._leg_time(leg, timestamp, last_leg)
+        leg_seconds, source = self._leg_time(leg, timestamp, last_leg, timestamp)
         remaining = (first["progress"] - progress) % route.length
         eta = leg_seconds * remaining / self.leg_lengths[leg]
         sources = [source]
@@ -192,15 +200,17 @@ class LivePredictor:
             spent = 0.0
             if last_arrival is not None and last_arrival["route_stop_position"] == current["position"]:
                 spent = (timestamp - datetime.fromisoformat(last_arrival["estimated_arrival_at"])).total_seconds()
-            eta += max(0.0, self._dwell(current["position"], last_dwell) - spent)
+            eta += max(0.0, self._dwell(current["position"], last_dwell, timestamp) - spent)
 
         rows, seen = [], set()
         for k, stop in enumerate(sequence):
             if k:
                 previous = sequence[k - 1]
                 leg = (previous["position"], stop["position"])
-                leg_seconds, source = self._leg_time(leg, timestamp, last_leg)
-                eta += self._dwell(previous["position"], last_dwell) + leg_seconds
+                dwell = self._dwell(previous["position"], last_dwell, timestamp + timedelta(seconds=eta))
+                leg_seconds, source = self._leg_time(
+                    leg, timestamp, last_leg, timestamp + timedelta(seconds=eta + dwell))
+                eta += dwell + leg_seconds
                 sources.append(source)
             # Report the next visit of each physical stop only.
             if stop["id"] in seen:

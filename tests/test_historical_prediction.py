@@ -189,6 +189,7 @@ class Stub:
     """Leg time is length / 5 m/s and every dwell is 10 s; rows only record what was asked."""
 
     name = 'stub'
+    inside_share = {'r:2': 0.5}
 
     def predict(self, target, rows):
         return [rows[0]['leg_length_m'] / 5 if target == 'leg' else 10.0]
@@ -199,7 +200,7 @@ class Stub:
 
     def dwell(self, route_id, position, when, synthetic=False):
         self.asked.append(('dwell', position, when))
-        return {}
+        return {'stop_position': f'{route_id}:{position}'}
 
 
 class PredictorTests(unittest.TestCase):
@@ -231,8 +232,20 @@ class PredictorTests(unittest.TestCase):
         replay = self.predictor.predict([observation(40, 0)])
         direct = self.predictor.predict_at(40, self.start)
         self.assertEqual([row['predicted_seconds'] for row in direct], [row['predicted_seconds'] for row in replay])
-        # At stop 1 (100 m): a full 10 s dwell, then the whole 200 m leg.
-        self.assertEqual(self.predictor.predict_at(100, self.start)[0]['predicted_seconds'], 50.0)
+        # At stop 1 (100 m), where only half of all visits are seen inside the stop area:
+        # the 10 s average dwell means 20 s for a bus that is inside, then the whole 200 m leg.
+        self.assertEqual(self.predictor.predict_at(100, self.start)[0]['predicted_seconds'], 60.0)
+
+    def test_a_bus_first_seen_past_a_stop_is_at_the_start_of_its_leg(self):
+        # Stop 1 (100 m) is crossed between samples; the bus is first seen at 160 m.
+        # Leg labels are timed from that point, so the whole 40 s leg time is still ahead,
+        # not 140 m / 200 m of it.
+        rows = self.predictor.predict([observation(40, 0), observation(160, 30), observation(200, 60, y=30)])
+        first = lambda seconds: next(row for row in rows
+                                     if row['prediction_observed_at'] == observation(0, seconds)['response_received_at'])
+        self.assertEqual((first(30)['stop_id'], first(30)['predicted_seconds']), ('2', 40.0))
+        # Halfway from there to the stop (70 m of 140 m left), half the leg time is left.
+        self.assertEqual(first(60)['predicted_seconds'], 20.0)
 
 
 class ModelTests(unittest.TestCase):
@@ -250,7 +263,7 @@ class ModelTests(unittest.TestCase):
             base = {'session_id': session, 'route_id': 'r', 'at': at, 'synthetic': synthetic}
             rows['leg'].append({**base, 'from_position': leg[0], 'to_position': leg[1], 'length_m': 200.0,
                                 'seconds': (60 if leg == ('2', '3') else 120) + 40 * afternoon + i % 3})
-            rows['dwell'].append({**base, 'stop_position': leg[0], 'seconds': 20.0})
+            rows['dwell'].append({**base, 'stop_position': leg[0], 'seconds': 20.0, 'seen_inside': i % 4 != 3})
         rows['leg'][1]['seconds'] = 5000.0  # One extreme value, clipped in training.
         return rows
 

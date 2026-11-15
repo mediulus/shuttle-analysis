@@ -28,7 +28,7 @@ SIM_DIR = ROOT / "trip simulation" / "generated"
 MODEL_DIR = ROOT / "results" / "historical_model"
 
 LEG_FIELDS = ["session_id", "route_id", "from_position", "to_position", "length_m", "at", "seconds", "synthetic"]
-DWELL_FIELDS = ["session_id", "route_id", "stop_position", "at", "seconds", "synthetic"]
+DWELL_FIELDS = ["session_id", "route_id", "stop_position", "at", "seconds", "seen_inside", "synthetic"]
 FIELDS = {"leg": LEG_FIELDS, "dwell": DWELL_FIELDS}
 
 
@@ -59,11 +59,11 @@ def route_labels(snapshot, observations):
             visit = visits.get((bus_id, position, arrival["estimated_arrival_at"]))
             if visit:
                 dwells.append({**base, "stop_position": position, "at": arrival["estimated_arrival_at"],
-                               "seconds": visit["observed_dwell_seconds"]})
+                               "seconds": visit["observed_dwell_seconds"], "seen_inside": 1})
             elif arrival["arrival_method"] == "between_samples":
                 # Never seen inside the stop area, so any stopped time is inside the legs around it.
                 dwells.append({**base, "stop_position": position, "at": arrival["estimated_arrival_at"],
-                               "seconds": 0.0})
+                               "seconds": 0.0, "seen_inside": 0})
             # Otherwise the bus was inside but never seen leaving: the dwell is unknown.
             before = last.get(bus_id)
             if before and index[before[0]["route_stop_position"]] == (index[position] - 1) % len(stops):
@@ -117,7 +117,8 @@ def simulated_labels(jobs=None, rebuild=False):
         for target in FIELDS:
             with gzip.open(_cache(target), "rt", newline="", encoding="utf-8") as file:
                 labels[target] = [{**row, "seconds": float(row["seconds"]), "synthetic": int(row["synthetic"]),
-                                   **({"length_m": float(row["length_m"])} if "length_m" in row else {})}
+                                   **({"length_m": float(row["length_m"])} if "length_m" in row else {}),
+                                   **({"seen_inside": int(row["seen_inside"])} if "seen_inside" in row else {})}
                                   for row in csv.DictReader(file)]
         return labels
     with (SIM_DIR / "manifest.csv").open(newline="", encoding="utf-8") as file:

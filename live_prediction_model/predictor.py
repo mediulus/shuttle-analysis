@@ -98,7 +98,7 @@ class LivePredictor:
                 dwell = dwell_events[next_dwell]
                 last_dwell[dwell["route_stop_position"]] = dwell["observed_dwell_seconds"]
                 next_dwell += 1
-            for bus_id, _, _, _, previous in group:
+            for bus_id, _, _, progress, previous in group:
                 if previous is None:
                     last_arrival.pop(bus_id, None)
                 arrivals = arrivals_by_fix.get((bus_id, timestamp.isoformat()), [])
@@ -109,7 +109,8 @@ class LivePredictor:
                     ) % route.length)
                 for arrival in arrivals:
                     self._record_leg(last_leg, last_arrival.get(bus_id), arrival, dwell_by_visit, timestamp)
-                    last_arrival[bus_id] = arrival
+                    # Keep where the bus was when the arrival was seen.
+                    last_arrival[bus_id] = {**arrival, "progress": progress}
             for bus_id, coord, _, progress, _ in group:
                 predictions.extend(self._predict_bus(
                     bus_id, coord, progress, timestamp, last_arrival.get(bus_id), last_leg, last_dwell))
@@ -169,8 +170,12 @@ class LivePredictor:
             return None
         return values[i - 1]
 
-    def _dwell(self, position, last_dwell, at=None):
-        """Dwell at a stop the bus is expected to reach at `at`."""
+    def _leg_span(self, leg, first, last_arrival):
+        """Distance that a leg time covers: here the whole leg, up to the stop `first`."""
+        return self.leg_lengths[leg]
+
+    def _dwell(self, position, last_dwell, at=None, inside=False):
+        """Dwell at a stop the bus is expected to reach at `at`, or is inside now."""
         observed = last_dwell.get(position, self.settings.default_dwell_s)
         return max(observed, self.settings.min_dwell_s)
 
@@ -194,13 +199,13 @@ class LivePredictor:
         leg = (stops[(next_index - 1) % n]["position"], first["position"])
         leg_seconds, source = self._leg_time(leg, timestamp, last_leg, timestamp)
         remaining = (first["progress"] - progress) % route.length
-        eta = leg_seconds * remaining / self.leg_lengths[leg]
+        eta = leg_seconds * remaining / self._leg_span(leg, first, last_arrival)
         sources = [source]
         if current is not None:
             spent = 0.0
             if last_arrival is not None and last_arrival["route_stop_position"] == current["position"]:
                 spent = (timestamp - datetime.fromisoformat(last_arrival["estimated_arrival_at"])).total_seconds()
-            eta += max(0.0, self._dwell(current["position"], last_dwell, timestamp) - spent)
+            eta += max(0.0, self._dwell(current["position"], last_dwell, timestamp, inside=True) - spent)
 
         rows, seen = [], set()
         for k, stop in enumerate(sequence):

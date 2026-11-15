@@ -1,0 +1,78 @@
+{
+  "settings": {
+    "learning_rate": 0.05,
+    "max_leaf_nodes": 15,
+    "min_samples_leaf": 50
+  },
+  "caps_seconds": {
+    "leg": 1200.0,
+    "dwell": 600.0
+  },
+  "scikit_learn": "1.9.1",
+  "training_sessions": [
+    "269aa618-0964-4292-ab8c-f7acdea30030",
+    "ab79b498-0da0-445a-ab7a-b51333629e8e",
+    "cdba4ba1-3b11-4e23-ae6a-7f65628800b5",
+    "ceca0263-c502-4c16-9e56-0e6656b5b393",
+    "d98b526a-bc68-47fa-ba7b-55246b06729e",
+    "e3cf497e-c2bf-407e-afc8-c71187cca2e3"
+  ],
+  "leg": {
+    "real_rows": 195,
+    "simulated_rows": 88619,
+    "rows_clipped_at_cap": 46,
+    "real_row_weight": 1,
+    "trees": 500,
+    "leave_one_session_out_mae_seconds": {
+      "weight 1, 100 trees": 56.06,
+      "weight 1, 200 trees": 52.24,
+      "weight 1, 300 trees": 50.69,
+      "weight 1, 500 trees": 50.13,
+      "baseline, weight 1": 54.0,
+      "weight 10, 100 trees": 52.26,
+      "weight 10, 200 trees": 51.3,
+      "weight 10, 300 trees": 51.46,
+      "weight 10, 500 trees": 53.87,
+      "baseline, weight 10": 52.94,
+      "weight 30, 100 trees": 51.73,
+      "weight 30, 200 trees": 52.44,
+      "weight 30, 300 trees": 52.97,
+      "weight 30, 500 trees": 53.08,
+      "baseline, weight 30": 52.63,
+      "weight 100, 100 trees": 50.79,
+      "weight 100, 200 trees": 51.24,
+      "weight 100, 300 trees": 50.96,
+      "weight 100, 500 trees": 50.62,
+      "baseline, weight 100": 52.5
+    }
+  },
+  "dwell": {
+    "real_rows": 254,
+    "simulated_rows": 111726,
+    "rows_clipped_at_cap": 1,
+    "real_row_weight": 100,
+    "trees": 300,
+    "leave_one_session_out_mae_seconds": {
+      "weight 1, 100 trees": 22.26,
+      "weight 1, 200 trees": 21.3,
+      "weight 1, 300 trees": 20.55,
+      "weight 1, 500 trees": 20.18,
+      "baseline, weight 1": 16.36,
+      "weight 10, 100 trees": 21.6,
+      "weight 10, 200 trees": 20.37,
+      "weight 10, 300 trees": 19.53,
+      "weight 10, 500 trees": 18.9,
+      "baseline, weight 10": 16.36,
+      "weight 30, 100 trees": 20.31,
+      "weight 30, 200 trees": 19.33,
+      "weight 30, 300 trees": 18.98,
+      "weight 30, 500 trees": 19.12,
+      "baseline, weight 30": 16.36,
+      "weight 100, 100 trees": 19.25,
+      "weight 100, 200 trees": 18.15,
+      "weight 100, 300 trees": 18.01,
+      "weight 100, 500 trees": 18.06,
+      "baseline, weight 100": 16.36
+    }
+  }
+}

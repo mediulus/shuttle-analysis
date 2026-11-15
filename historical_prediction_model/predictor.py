@@ -1,8 +1,11 @@
 """Predict arrivals at a bus's next stops from the trained historical model.
 
-Position handling and ETA assembly are the live predictor's. Only the source of
-each leg time and dwell differs: here they come from the model, looked up for
-the time the bus is expected to reach that leg or stop.
+Position handling and ETA assembly are the live predictor's. The leg times and
+dwells come from the model instead, looked up for the time the bus is expected
+to reach that leg or stop. Two adjustments keep the sum consistent with how the
+training labels are measured: the current leg is scaled from where the bus was
+first seen past the previous stop, and a bus inside a stop gets the dwell of
+buses that are seen inside.
 
     .venv/bin/python -m historical_prediction_model.predictor --route 71342 --x 1200 --time "2026-11-06 17:58"
 """
@@ -34,8 +37,21 @@ class HistoricalPredictor(LivePredictor):
         row = self.features.leg(self.route.route_id, leg, round(self.leg_lengths[leg], 1), at or timestamp)
         return self.estimator.predict("leg", [row])[0], self.estimator.name
 
-    def _dwell(self, position, last_dwell, at=None):
-        return self.estimator.predict("dwell", [self.features.dwell(self.route.route_id, position, at)])[0]
+    def _leg_span(self, leg, first, last_arrival):
+        # A leg label is timed from where the bus was first seen at or past the previous stop,
+        # so the share of the leg still to go is measured from that point, not from the stop itself.
+        if last_arrival is not None and last_arrival["route_stop_position"] == leg[0]:
+            return max((first["progress"] - last_arrival["progress"]) % self.route.length, 1.0)
+        return self.leg_lengths[leg]
+
+    def _dwell(self, position, last_dwell, at=None, inside=False):
+        row = self.features.dwell(self.route.route_id, position, at)
+        seconds = self.estimator.predict("dwell", [row])[0]
+        if inside:
+            # The average dwell counts buses that were never seen inside the stop as 0 s.
+            # This bus is inside, so it is not one of those.
+            seconds /= self.estimator.inside_share.get(row.get("stop_position"), 1.0)
+        return seconds
 
     def predict(self, observations):
         # Rows are predicted one at a time, where a single thread is far faster.

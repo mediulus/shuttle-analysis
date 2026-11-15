@@ -1,6 +1,6 @@
 # Historical Prediction Model — Design
 
-Status: **design only, nothing implemented.**
+Status: **implemented** in `historical_prediction_model/`. Commands are under [Run](#run).
 
 Given a route, a position on it and a time, the model predicts the seconds until
 the bus reaches each of its next four stops. It learns typical travel times from
@@ -18,7 +18,7 @@ ETA_predicted = w1 * (historical) + w2 * (current)
 | --- | --- |
 | What is predicted | Travel time of each leg and dwell at each stop, summed into the four ETAs |
 | Output | One time for each stop: the average the model expects |
-| Algorithm | Gradient-boosted trees (scikit-learn) |
+| Algorithm | Gradient-boosted trees (scikit-learn's `HistGradientBoostingRegressor`) |
 | Weather on simulated days | The simulator's own scenario, not real weather |
 | Test data | Real trips only: every session the simulator was not calibrated on |
 
@@ -28,8 +28,8 @@ Dates are UTC.
 
 | Data | Period | Size | Used for |
 | --- | --- | --- | --- |
-| Simulated trips, `trip simulation/generated/` | Nov 12, 2024 – Nov 11, 2026 | 15,513 trips, about 149,000 stop arrivals | Training |
-| Real sessions the simulator was calibrated on (6) | Nov 5–11, 2026 | 268 stop arrivals | Training |
+| Simulated trips, `trip simulation/generated/` | Nov 12, 2024 – Nov 11, 2026 | 15,513 trips: 88,619 legs and 111,726 stop visits detected | Training |
+| Real sessions the simulator was calibrated on (6) | Nov 5–11, 2026 | 195 legs and 254 stop visits | Training |
 | Real sessions the simulator never saw: 4 held-out, Megan's `ff9db9e6`, April's 3 trial sessions | Nov 11–14, 2026 | 259 stop arrivals | Testing only |
 | KBOS weather, `data/historical_weather/` | Nov 13, 2021 – Nov 12, 2026 | 52,339 observations | Features on real rows |
 | Community events, `mit_comunity_events/` | 2019 – 2027 | Games, calendar, classes, practice | Features on real rows |
@@ -56,13 +56,17 @@ leg time  T_i = arrival at stop i − last time seen inside stop i−1
 dwell     d_i = last time seen inside stop i − arrival at stop i
 ```
 
+A bus that passes a stop between two samples is never seen inside it, so its
+dwell is 0 and its leg starts at the first sample past the stop.
+
 A dwell plus the leg after it always equals the exact arrival-to-arrival time. A
 dwell that 30 s polling records as 0 is therefore still counted, inside the leg,
 and the live model's 30 s dwell floor is not needed here.
 
 Both models predict the average, because averages add up correctly across legs.
 A middle value would not: 75% of real dwells are recorded as 0 s but the average
-is 23 s, so a middle value would drop dwell from every sum.
+is 23 s, so a middle value would drop dwell from every sum. Averages are pulled
+up by rare long holds, so training clips legs at 20 minutes and dwells at 10.
 
 ## Features
 
@@ -83,6 +87,10 @@ Nov 6, 2026 at 5:58 PM Boston time. All values are real.
 | `classes_ending_15min` | 0 (76 at 5:00 PM) | `class_meetings.csv`, in term only | Missing |
 | `practice_block` | 1 | `practice_blocks.csv` | Missing |
 | `is_synthetic` | 0 | 0 | 1 |
+
+The dwell model uses the stop in place of `leg_id` and has no length. `weekday`,
+`is_holiday` and `term_period` follow the service day, which runs 4 AM to 4 AM,
+so a 1 AM Saferide trip belongs to the evening before.
 
 ## Weather encoding
 
@@ -203,22 +211,63 @@ Input: route, position x along the route (m), time t
 1. Find the next four stops s1..s4 and the share of the current leg left, r / L1.
 2. Build one feature row for each upcoming leg and stop; predict T_i and d_i.
    Each row uses the time the bus is predicted to get there, starting from t.
-3. ETA(s1) = T1 · (r / L1)
+3. ETA(s1) = T1 · (r / r0)
    ETA(sk) = ETA(s(k−1)) + d(k−1) + Tk          for k = 2..4
-   Bus inside a stop area: first add max(0, d − time already spent).
+   Bus inside a stop area: first add max(0, d / p − time already spent).
+
+r0 = distance to s1 from where the bus was first seen at or past the previous
+     stop; the whole leg L1 if that was not seen. Leg times are measured from there.
+p  = share of visits to this stop where the bus is seen inside the stop area.
+     The average dwell d counts the other visits as 0 s; this bus is not one of them.
 ```
+
+Position handling is the live predictor's. `r0` and `p` keep the sum consistent
+with how the labels are measured. Without them the first stop's ETA came out about
+11 s early.
 
 ## Training and evaluation
 
 - **Training.** Simulated and real training rows together. Real rows get extra
-  weight. The weight and the number of trees are chosen by leaving out one real
-  training session at a time.
+  weight. The weight (1, 10, 30 or 100) and the number of trees (100 to 500) are
+  chosen by leaving out one real training session at a time. Fixed settings:
+  learning rate 0.05, at most 15 end points per tree, at least 50 rows behind each.
 - **Baseline.** The average leg time and dwell for each leg and hour of the week,
   from the same rows. The model has to beat it.
 - **Test.** Replay the real test sessions and score them with the existing
   checkpoint evaluator ([ETA_EVALUATION.md](ETA_EVALUATION.md)), so the results
   line up with the live model and Passio on the same pairs.
 - **Reported.** MAE and bias by stops ahead.
+
+## Run
+
+```bash
+# Train. The first run reads the whole simulated dataset (about 5 minutes); later runs reuse the cached rows.
+.venv/bin/python -m historical_prediction_model.train
+# Score every real session not used for training, against the baseline, the live model and Passio.
+.venv/bin/python -m historical_prediction_model.evaluate_historical
+# One prediction for a time and place (distance along the route in metres, Boston time).
+.venv/bin/python -m historical_prediction_model.predictor --route 71342 --x 1200 --time "2026-11-06 17:58"
+```
+
+Outputs: `results/historical_model/` (the model, the settings chosen, cached
+simulated rows) and `results/evaluation/historical/`.
+
+## First results
+
+Real test sessions in this branch, on the 138 to 94 checkpoint pairs that all
+four have. MAE in seconds, bias in brackets (negative = predicted too early).
+
+| Stops ahead | Historical model | Averages baseline | Live model | Passio |
+| --- | --- | --- | --- | --- |
+| 1 | 65 (−16) | 65 (+3) | 81 (−33) | 104 (−81) |
+| 2 | 109 (−34) | 106 (+4) | 132 (−50) | 181 (−161) |
+| 3 | 144 (−56) | 134 (−3) | 171 (−69) | 255 (−239) |
+| 4 | 167 (−69) | 153 (−3) | 194 (−72) | 319 (−304) |
+
+The model beats the live model and Passio, but **not the averages baseline**,
+and it predicts early. It learned that real legs are shorter than simulated
+ones from 195 real legs, and that did not hold on the test days. Adding
+Megan's Nov 13–14 rows from `main` gives the same ranking.
 
 ## Moving to real data
 
@@ -235,5 +284,7 @@ down-weighted and then dropped, and `is_synthetic` goes with them.
   on Nov 13–14. It currently writes to `data/data/`, not where the file is committed.
 - **Megan's Nov 13–14 rows are on `main` only.** Where historical data and live
   trial data are stored is undecided.
+- **The saved model is a pickle,** tied to the installed scikit-learn version.
+  Retrain after upgrading.
 - **Games have no venue,** and 1,416 of 5,637 have no start time and are skipped.
 - **New dependency:** `scikit-learn`.

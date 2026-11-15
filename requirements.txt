@@ -1,3 +1,4 @@
 requests
 matplotlib
 python-dotenv
+scikit-learn

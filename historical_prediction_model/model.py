@@ -21,6 +21,7 @@ SETTINGS = {"learning_rate": 0.05, "max_leaf_nodes": 15, "min_samples_leaf": 50}
 CAPS = {"leg": 1200.0, "dwell": 600.0}
 # Chosen by leaving one real training session out at a time.
 REAL_ROW_WEIGHTS = (1, 10, 30, 100)  # A simulated row always counts 1.
+MIN_INSIDE_SHARE = 0.25
 TREE_COUNTS = (100, 200, 300, 500)
 
 
@@ -67,6 +68,7 @@ class BoostedEstimator:
 
     def __init__(self):
         self.models, self.categories = {}, {}
+        self.inside_share = {}  # Stop -> share of visits where the bus was seen inside the stop area.
 
     def predict(self, target, rows):
         matrix = encode(rows, FEATURES[target], self.categories[target])
@@ -80,6 +82,7 @@ class BaselineEstimator:
 
     def __init__(self):
         self.tables = {}
+        self.inside_share = {}
 
     @staticmethod
     def _keys(target, row):
@@ -98,6 +101,15 @@ class BaselineEstimator:
     def predict(self, target, rows):
         table = self.tables[target]
         return [next(table[key] for key in self._keys(target, row) if key in table) for row in rows]
+
+
+def inside_shares(rows, labels, weights):
+    """Share of visits to each stop where the bus was seen inside the stop area, not just past it."""
+    seen, total = defaultdict(float), defaultdict(float)
+    for row, label, weight in zip(rows, labels, weights):
+        total[row["stop_position"]] += weight
+        seen[row["stop_position"]] += weight * label["seen_inside"]
+    return {stop: max(seen[stop] / total[stop], MIN_INSIDE_SHARE) for stop in total}
 
 
 def choose(target, rows, matrix, y, raw_y, real, sessions):
@@ -146,6 +158,8 @@ def train(labels, builder, log=print):
         boosted.models[target] = fit(matrix, y, weights, features, trees)
         boosted.categories[target] = categories
         baseline.fit(target, rows, y, weights)
+        if target == "dwell":
+            boosted.inside_share = baseline.inside_share = inside_shares(rows, labels[target], weights)
         report[target] = {
             "real_rows": int(real.sum()), "simulated_rows": int((~real).sum()),
             "rows_clipped_at_cap": int((raw_y > CAPS[target]).sum()),
